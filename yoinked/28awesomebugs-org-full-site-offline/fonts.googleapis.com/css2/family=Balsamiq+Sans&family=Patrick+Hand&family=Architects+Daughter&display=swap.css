@@ -1,0 +1,21 @@
+@font-face {
+  font-family: 'Architects Daughter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../../fonts.gstatic.com/s/architectsdaughter/v20/KtkxAKiDZI_td1Lkx62xHZHDtgO_Y-bvfY4.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Balsamiq Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../../fonts.gstatic.com/s/balsamiqsans/v15/P5sEzZiAbNrN8SB3lQQX7Pnc8dk.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Patrick Hand';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../../fonts.gstatic.com/s/patrickhand/v25/LDI1apSQOAYtSuYWp8ZhfYeMWQ.ttf) format('truetype');
+}

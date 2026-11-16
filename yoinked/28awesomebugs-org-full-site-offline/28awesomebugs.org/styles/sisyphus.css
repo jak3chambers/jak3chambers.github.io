@@ -1,0 +1,966 @@
+
+
+
+
+
+
+
+.sisyphus-hud-instance.phase2 .panop-boss-name { color: #ff5252; text-shadow: 0 0 12px rgba(255,82,82,0.8), 0 1px 3px rgba(0,0,0,0.8); }
+
+
+.sisyphus-voice {
+  position: absolute;
+  z-index: 201;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  font-size: clamp(20px, 3.5vw, 40px);
+  color: #ffd54f;
+  text-shadow: 0 0 16px rgba(255,213,79,0.8), 0 2px 4px rgba(0,0,0,0.9);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease-in;
+  white-space: nowrap;
+}
+.sisyphus-voice.show { opacity: 1; }
+.sisyphus-voice.phase2 { color: #ff5252; text-shadow: 0 0 16px rgba(255,82,82,0.8), 0 2px 4px rgba(0,0,0,0.9); }
+
+
+.sisyphus-figure {
+  position: absolute;
+  width: 120px;
+  height: 240px;
+  z-index: 10001;
+  pointer-events: none;
+  transition: none;
+  will-change: transform;
+}
+.sisyphus-figure.facing-left { transform: scaleX(-1); }
+
+
+
+.sisyphus-figure .s-head {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #fff9c4, #ffd54f 50%, #ffab00 100%);
+  box-shadow: 0 0 24px 8px rgba(255,213,79,0.7), 0 0 50px 14px rgba(255,171,0,0.3);
+  transition: box-shadow 0.15s, background 0.15s;
+  transform-origin: 50% 130%;
+  z-index: 12;
+  overflow: visible;
+}
+
+
+.sisyphus-figure .s-head::before,
+.sisyphus-figure .s-head::after {
+  content: '';
+  position: absolute;
+  top: 16px;
+  width: 8px;
+  height: 5px;
+  background: transparent;
+  border: 1.5px solid #b71c1c;
+  border-radius: 50%;
+  box-shadow: 0 0 3px rgba(183,28,28,0.5);
+}
+.sisyphus-figure .s-head::before {
+  left: 10px;
+}
+.sisyphus-figure .s-head::after {
+  right: 10px;
+}
+
+.sisyphus-figure .s-neck {
+  position: absolute;
+  width: 8px;
+  height: 7px;
+  top: 42px;
+  left: 50%;
+  transform: translateX(-50%);
+  transform-origin: 50% 100%;
+  background: rgba(255,213,79,0.7);
+  border-radius: 2px;
+  transition: transform 0.12s ease;
+  z-index: 9;
+}
+.sisyphus-figure .s-neck::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: calc(100% - 2px);
+  background: rgba(183,28,28,0.25);
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+
+.sisyphus-figure .s-torso {
+  position: absolute;
+  width: 14px;
+  height: 72px;
+  top: 49px;
+  left: 50%;
+  transform: translateX(-50%);
+  transform-origin: top center;
+  background: rgba(255,213,79,0.8);
+  box-shadow: 0 0 6px rgba(255,213,79,0.4);
+  transition: transform 0.12s ease;
+  border-radius: 4px 4px 2px 2px;
+  z-index: 1;
+}
+
+.sisyphus-figure .s-torso::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: calc(100% - 8px);
+  background: rgba(183,28,28,0.3);
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+
+.sisyphus-figure .s-arm {
+  position: absolute;
+  width: 10px;
+  height: 32px;
+  top: 53px;
+  background: rgba(255,213,79,0.8);
+  transform-origin: top center;
+  transition: transform 0.12s ease;
+  border-radius: 3px;
+  z-index: 3;
+}
+
+.sisyphus-figure .s-arm::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: calc(100% - 6px);
+  background: rgba(183,28,28,0.3);
+  border-radius: 1px;
+  pointer-events: none;
+}
+.sisyphus-figure .s-arm-left  { left: calc(50% - 10px); transform: rotate(20deg); }
+.sisyphus-figure .s-arm-right { left: calc(50% + 1px); transform: rotate(-20deg); }
+
+.sisyphus-figure .s-forearm {
+  position: absolute;
+  width: 9px;
+  height: 32px;
+  top: 28px;
+  left: 0;
+  background: linear-gradient(to bottom, #ffd54f, #c62828);
+  transform-origin: top center;
+  transition: transform 0.12s ease;
+  border-radius: 3px;
+}
+
+.sisyphus-figure .s-forearm::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: calc(100% - 6px);
+  background: rgba(183,28,28,0.25);
+  border-radius: 1px;
+  pointer-events: none;
+}
+.sisyphus-figure .s-arm-left .s-forearm  { transform: rotate(-15deg); }
+.sisyphus-figure .s-arm-right .s-forearm { transform: rotate(15deg); }
+
+
+.sisyphus-figure .s-fist {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #c62828, #8b0000);
+  box-shadow: 0 0 5px rgba(198,40,40,0.5);
+}
+
+
+.sisyphus-figure .s-leg {
+  position: absolute;
+  width: 10px;
+  height: 36px;
+  top: 117px;
+  background: rgba(255,213,79,0.8);
+  transform-origin: top center;
+  transition: transform 0.12s ease;
+  border-radius: 3px;
+  z-index: 2;
+}
+
+.sisyphus-figure .s-leg::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: calc(100% - 6px);
+  background: rgba(183,28,28,0.3);
+  border-radius: 1px;
+  pointer-events: none;
+}
+.sisyphus-figure .s-leg-left  { left: calc(50% - 10px); transform: rotate(8deg); }
+.sisyphus-figure .s-leg-right { left: calc(50% + 1px); transform: rotate(-8deg); }
+
+.sisyphus-figure .s-shin {
+  position: absolute;
+  width: 9px;
+  height: 36px;
+  top: 32px;
+  left: 0;
+  background: linear-gradient(to bottom, #ffd54f, #c62828);
+  transform-origin: top center;
+  transition: transform 0.12s ease;
+  border-radius: 3px;
+}
+
+.sisyphus-figure .s-shin::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: calc(100% - 6px);
+  background: rgba(183,28,28,0.25);
+  border-radius: 1px;
+  pointer-events: none;
+}
+.sisyphus-figure .s-leg-left .s-shin  { transform: rotate(-8deg); }
+.sisyphus-figure .s-leg-right .s-shin { transform: rotate(8deg); }
+
+
+.sisyphus-figure .s-foot {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 10px;
+  border-radius: 3px;
+  background: #8b0000;
+}
+
+
+.sisyphus-figure.idle {
+  animation: sisyphus-bob 0.8s ease-in-out infinite;
+}
+@keyframes sisyphus-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.sisyphus-figure.idle.facing-left {
+  animation: sisyphus-bob-left 0.8s ease-in-out infinite;
+}
+@keyframes sisyphus-bob-left {
+  0%, 100% { transform: translateY(0) scaleX(-1); }
+  50% { transform: translateY(-8px) scaleX(-1); }
+}
+
+
+.sisyphus-figure.guard .s-torso     { transform: translateX(-50%) rotate(0deg); }
+.sisyphus-figure.guard .s-arm-left  { transform: rotate(30deg); }
+.sisyphus-figure.guard .s-arm-left .s-forearm { transform: rotate(128deg); }
+.sisyphus-figure.guard .s-arm-right { transform: rotate(-11deg); }
+.sisyphus-figure.guard .s-arm-right .s-forearm { transform: rotate(136deg); }
+.sisyphus-figure.guard .s-leg-left  { transform: rotate(50deg); }
+.sisyphus-figure.guard .s-leg-left .s-shin { transform: rotate(-62deg); }
+.sisyphus-figure.guard .s-leg-right { transform: rotate(28deg); }
+.sisyphus-figure.guard .s-leg-right .s-shin { transform: rotate(-71deg); }
+
+
+
+.sisyphus-figure.phase2 .s-head {
+  box-shadow: 0 0 28px 10px rgba(255,213,79,0.8), 0 0 60px 18px rgba(255,171,0,0.4);
+}
+
+
+.sisyphus-figure .s-beard {
+  display: none;
+  position: absolute;
+  transform-origin: 50% 100%;
+  transition: transform 0.12s ease;
+  z-index: 11;
+}
+.sisyphus-figure.phase2 .s-beard {
+  display: none;
+}
+
+
+.sisyphus-figure .s-head .face-shape-1,
+.sisyphus-figure .s-head .face-shape-2,
+.sisyphus-figure .s-head .face-shape-3,
+.sisyphus-figure .s-head .face-shape-4 {
+  display: none;
+}
+.sisyphus-figure.phase2 .s-head .face-shape-1 {
+  display: block;
+  position: absolute;
+  z-index: 20;
+  width: 0;
+  height: 0;
+  left: 31px;
+  top: 21px;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 22px solid #b71c1c;
+  transform: rotate(33deg);
+  opacity: 0.75;
+}
+.sisyphus-figure.phase2 .s-head .face-shape-2 {
+  display: block;
+  position: absolute;
+  z-index: 20;
+  width: 0;
+  height: 0;
+  left: -3px;
+  top: 21px;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 22px solid #b71c1c;
+  transform: rotate(-33deg);
+  opacity: 0.75;
+}
+.sisyphus-figure.phase2 .s-head .face-shape-3 {
+  display: block;
+  position: absolute;
+  z-index: 20;
+  left: 5px;
+  top: 36px;
+  width: 34px;
+  height: 20px;
+  border-radius: 50%;
+  background: #b71c1c;
+  opacity: 0.75;
+}
+.sisyphus-figure.phase2 .s-head .face-shape-4 {
+  display: block;
+  position: absolute;
+  z-index: 20;
+  left: 8px;
+  top: 28px;
+  width: 28px;
+  height: 6px;
+  border-radius: 2px;
+  background: #b71c1c;
+  opacity: 0.60;
+}
+
+
+.sisyphus-figure .s-hair {
+  display: none;
+}
+.sisyphus-figure.phase2 .s-hair {
+  display: block;
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  transform-origin: 50% 0;
+  width: 56px;
+  height: 40px;
+  z-index: -1;
+  pointer-events: none;
+  transition: transform 0.12s ease;
+}
+.sisyphus-figure.phase2 .s-hair::before,
+.sisyphus-figure.phase2 .s-hair::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 3px;
+  border-radius: 0 0 2px 2px;
+  background: linear-gradient(to bottom, #d32f2f, #b71c1c 70%, transparent);
+}
+.sisyphus-figure.phase2 .s-hair::before {
+  left: 4px;
+  height: 28px;
+  transform: rotate(10deg);
+}
+.sisyphus-figure.phase2 .s-hair::after {
+  right: 4px;
+  height: 24px;
+  transform: rotate(-8deg);
+}
+
+.sisyphus-figure.phase2 .s-hair {
+  background: none;
+}
+.s-hair-strand {
+  display: none;
+}
+.sisyphus-figure.phase2 .s-hair-strand {
+  display: block;
+  position: absolute;
+  width: 3px;
+  background: linear-gradient(to bottom, #d32f2f, #b71c1c 60%, transparent);
+  border-radius: 0 0 2px 2px;
+  z-index: -1;
+}
+
+.sisyphus-figure.phase2 .s-hair-strand:nth-child(1) {
+  top: 32px; left: calc(50% - 20px);
+  height: 36px; transform: rotate(12deg);
+}
+.sisyphus-figure.phase2 .s-hair-strand:nth-child(2) {
+  top: 28px; left: calc(50% - 10px);
+  height: 42px; transform: rotate(6deg);
+}
+.sisyphus-figure.phase2 .s-hair-strand:nth-child(3) {
+  top: 26px; left: calc(50%);
+  height: 46px; transform: rotate(2deg);
+}
+.sisyphus-figure.phase2 .s-hair-strand:nth-child(4) {
+  top: 28px; left: calc(50% + 10px);
+  height: 40px; transform: rotate(-5deg);
+}
+.sisyphus-figure.phase2 .s-hair-strand:nth-child(5) {
+  top: 32px; left: calc(50% + 18px);
+  height: 34px; transform: rotate(-10deg);
+}
+
+
+.sisyphus-figure.phase2::after {
+  content: '';
+  position: absolute;
+  inset: -16px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,213,79,0.1), transparent 70%);
+  animation: phase2-pulse 0.6s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes phase2-pulse {
+  from { opacity: 0.4; transform: scale(1); }
+  to   { opacity: 0.8; transform: scale(1.1); }
+}
+
+
+
+
+
+.sisyphus-figure.pose-sumo .s-torso    { transform: translateX(-50%) rotate(0deg); }
+.sisyphus-figure.pose-sumo .s-arm-left  { transform: rotate(60deg); }
+.sisyphus-figure.pose-sumo .s-arm-left .s-forearm { transform: rotate(-30deg); }
+.sisyphus-figure.pose-sumo .s-arm-right { transform: rotate(-60deg); }
+.sisyphus-figure.pose-sumo .s-arm-right .s-forearm { transform: rotate(30deg); }
+.sisyphus-figure.pose-sumo .s-leg-left  { transform: rotate(40deg); }
+.sisyphus-figure.pose-sumo .s-leg-left .s-shin { transform: rotate(-45deg); }
+.sisyphus-figure.pose-sumo .s-leg-right { transform: rotate(-40deg); }
+.sisyphus-figure.pose-sumo .s-leg-right .s-shin { transform: rotate(45deg); }
+
+
+.sisyphus-figure.pose-punch .s-torso    { transform: translateX(-50%) rotate(0deg); }
+.sisyphus-figure.pose-punch .s-arm-left  { transform: rotate(-22deg); }
+.sisyphus-figure.pose-punch .s-arm-left .s-forearm { transform: rotate(-141deg); }
+.sisyphus-figure.pose-punch .s-arm-right { transform: rotate(-84deg); transition: transform 0.05s; }
+.sisyphus-figure.pose-punch .s-arm-right .s-forearm { transform: rotate(-5deg); }
+.sisyphus-figure.pose-punch .s-leg-left  { transform: rotate(-16deg); }
+.sisyphus-figure.pose-punch .s-leg-left .s-shin { transform: rotate(55deg); }
+.sisyphus-figure.pose-punch .s-leg-right { transform: rotate(-37deg); }
+.sisyphus-figure.pose-punch .s-leg-right .s-shin { transform: rotate(39deg); }
+
+
+.sisyphus-figure.pose-kick .s-torso    { transform: translateX(-50%) rotate(0deg); }
+.sisyphus-figure.pose-kick .s-arm-left  { transform: rotate(-103deg); }
+.sisyphus-figure.pose-kick .s-arm-left .s-forearm { transform: rotate(-88deg); }
+.sisyphus-figure.pose-kick .s-arm-right { transform: rotate(-70deg); }
+.sisyphus-figure.pose-kick .s-arm-right .s-forearm { transform: rotate(-136deg); }
+.sisyphus-figure.pose-kick .s-leg-left  { transform: rotate(-24deg); }
+.sisyphus-figure.pose-kick .s-leg-left .s-shin { transform: rotate(74deg); }
+.sisyphus-figure.pose-kick .s-leg-right { transform: rotate(-90deg); transition: transform 0.06s; }
+.sisyphus-figure.pose-kick .s-leg-right .s-shin { transform: rotate(12deg); }
+
+
+.sisyphus-figure.pose-stomp .s-torso    { transform: translateX(-50%) rotate(0deg); }
+.sisyphus-figure.pose-stomp .s-arm-left  { transform: rotate(-1deg); }
+.sisyphus-figure.pose-stomp .s-arm-left .s-forearm { transform: rotate(-26deg); }
+.sisyphus-figure.pose-stomp .s-arm-right { transform: rotate(-7deg); }
+.sisyphus-figure.pose-stomp .s-arm-right .s-forearm { transform: rotate(-28deg); }
+.sisyphus-figure.pose-stomp .s-leg-left  { transform: rotate(-9deg); }
+.sisyphus-figure.pose-stomp .s-leg-left .s-shin { transform: rotate(28deg); }
+.sisyphus-figure.pose-stomp .s-leg-right { transform: rotate(-90deg); }
+.sisyphus-figure.pose-stomp .s-leg-right .s-shin { transform: rotate(96deg); }
+
+
+.sisyphus-figure.pose-uppercut .s-torso    { transform: translateX(-50%) rotate(0deg); }
+.sisyphus-figure.pose-uppercut .s-arm-left  { transform: rotate(-38deg); }
+.sisyphus-figure.pose-uppercut .s-arm-left .s-forearm { transform: rotate(-111deg); }
+.sisyphus-figure.pose-uppercut .s-arm-right { transform: rotate(-140deg); transition: transform 0.05s; }
+.sisyphus-figure.pose-uppercut .s-arm-right .s-forearm { transform: rotate(-20deg); }
+.sisyphus-figure.pose-uppercut .s-leg-left  { transform: rotate(-28deg); }
+.sisyphus-figure.pose-uppercut .s-leg-left .s-shin { transform: rotate(67deg); }
+.sisyphus-figure.pose-uppercut .s-leg-right { transform: rotate(-42deg); }
+.sisyphus-figure.pose-uppercut .s-leg-right .s-shin { transform: rotate(47deg); }
+
+
+.sisyphus-figure.pose-charge .s-torso    { transform: translateX(-50%) rotate(0deg); }
+.sisyphus-figure.pose-charge .s-arm-left  { transform: rotate(36deg); }
+.sisyphus-figure.pose-charge .s-arm-left .s-forearm { transform: rotate(115deg); }
+.sisyphus-figure.pose-charge .s-arm-right { transform: rotate(-26deg); }
+.sisyphus-figure.pose-charge .s-arm-right .s-forearm { transform: rotate(-113deg); }
+.sisyphus-figure.pose-charge .s-leg-left  { transform: rotate(50deg); }
+.sisyphus-figure.pose-charge .s-leg-left .s-shin { transform: rotate(-73deg); }
+.sisyphus-figure.pose-charge .s-leg-right { transform: rotate(-47deg); }
+.sisyphus-figure.pose-charge .s-leg-right .s-shin { transform: rotate(79deg); }
+
+
+
+.sisyphus-figure.pose-clap .s-torso    { transform: translateX(-50%) rotate(-1deg); }
+.sisyphus-figure.pose-clap .s-arm-left  { transform: rotate(-82deg); transition: transform 0.05s; }
+.sisyphus-figure.pose-clap .s-arm-left .s-forearm { transform: rotate(-5deg); }
+.sisyphus-figure.pose-clap .s-arm-right { transform: rotate(-80deg); transition: transform 0.05s; }
+.sisyphus-figure.pose-clap .s-arm-right .s-forearm { transform: rotate(-5deg); }
+.sisyphus-figure.pose-clap .s-leg-left  { transform: rotate(-25deg); }
+.sisyphus-figure.pose-clap .s-leg-left .s-shin { transform: rotate(56deg); }
+.sisyphus-figure.pose-clap .s-leg-right { transform: rotate(-32deg); }
+.sisyphus-figure.pose-clap .s-leg-right .s-shin { transform: rotate(51deg); }
+
+
+.sisyphus-figure.pose-clap-open .s-torso    { transform: translateX(-50%) rotate(-1deg); }
+.sisyphus-figure.pose-clap-open .s-arm-left  { transform: rotate(40deg); }
+.sisyphus-figure.pose-clap-open .s-arm-left .s-forearm { transform: rotate(-20deg); }
+.sisyphus-figure.pose-clap-open .s-arm-right { transform: rotate(-160deg); }
+.sisyphus-figure.pose-clap-open .s-arm-right .s-forearm { transform: rotate(-20deg); }
+.sisyphus-figure.pose-clap-open .s-leg-left  { transform: rotate(-25deg); }
+.sisyphus-figure.pose-clap-open .s-leg-left .s-shin { transform: rotate(56deg); }
+.sisyphus-figure.pose-clap-open .s-leg-right { transform: rotate(-32deg); }
+.sisyphus-figure.pose-clap-open .s-leg-right .s-shin { transform: rotate(51deg); }
+
+
+.sisyphus-figure.pose-roundhouse .s-torso    { transform: translateX(-50%) rotate(-8deg); }
+.sisyphus-figure.pose-roundhouse .s-leg-right { transform: rotate(140deg); transition: transform 0.12s; }
+.sisyphus-figure.pose-roundhouse .s-leg-right .s-shin { transform: rotate(-15deg); }
+.sisyphus-figure.pose-roundhouse .s-leg-left  { transform: rotate(22deg); }
+.sisyphus-figure.pose-roundhouse .s-leg-left .s-shin { transform: rotate(-40deg); }
+.sisyphus-figure.pose-roundhouse .s-arm-left  { transform: rotate(25deg); }
+.sisyphus-figure.pose-roundhouse .s-arm-left .s-forearm { transform: rotate(130deg); }
+.sisyphus-figure.pose-roundhouse .s-arm-right { transform: rotate(20deg); }
+.sisyphus-figure.pose-roundhouse .s-arm-right .s-forearm { transform: rotate(120deg); }
+
+
+.sisyphus-figure.pose-chop-windup .s-torso    { transform: translateX(-50%) rotate(-3deg); }
+.sisyphus-figure.pose-chop-windup .s-arm-left  { transform: rotate(43deg); }
+.sisyphus-figure.pose-chop-windup .s-arm-left .s-forearm { transform: rotate(-122deg); }
+.sisyphus-figure.pose-chop-windup .s-arm-right { transform: rotate(-155deg); }
+.sisyphus-figure.pose-chop-windup .s-arm-right .s-forearm { transform: rotate(-66deg); }
+.sisyphus-figure.pose-chop-windup .s-leg-left  { transform: rotate(-44deg); }
+.sisyphus-figure.pose-chop-windup .s-leg-left .s-shin { transform: rotate(93deg); }
+.sisyphus-figure.pose-chop-windup .s-leg-right { transform: rotate(-52deg); }
+.sisyphus-figure.pose-chop-windup .s-leg-right .s-shin { transform: rotate(74deg); }
+
+
+.sisyphus-figure.pose-chop-strike .s-torso    { transform: translateX(-50%) rotate(0deg); transition: transform 0.05s; }
+.sisyphus-figure.pose-chop-strike .s-arm-left  { transform: rotate(38deg); transition: transform 0.05s; }
+.sisyphus-figure.pose-chop-strike .s-arm-left .s-forearm { transform: rotate(-26deg); }
+.sisyphus-figure.pose-chop-strike .s-arm-right { transform: rotate(-22deg); transition: transform 0.05s; }
+.sisyphus-figure.pose-chop-strike .s-arm-right .s-forearm { transform: rotate(-82deg); }
+.sisyphus-figure.pose-chop-strike .s-leg-left  { transform: rotate(-54deg); }
+.sisyphus-figure.pose-chop-strike .s-leg-left .s-shin { transform: rotate(93deg); }
+.sisyphus-figure.pose-chop-strike .s-leg-right { transform: rotate(-52deg); }
+.sisyphus-figure.pose-chop-strike .s-leg-right .s-shin { transform: rotate(74deg); }
+
+
+.sisyphus-figure.pose-airborne .s-torso    { transform: translateX(-50%) rotate(0deg); }
+.sisyphus-figure.pose-airborne .s-arm-left  { transform: rotate(41deg); }
+.sisyphus-figure.pose-airborne .s-arm-left .s-forearm { transform: rotate(-45deg); }
+.sisyphus-figure.pose-airborne .s-arm-right { transform: rotate(-151deg); }
+.sisyphus-figure.pose-airborne .s-arm-right .s-forearm { transform: rotate(-10deg); }
+.sisyphus-figure.pose-airborne .s-leg-left  { transform: rotate(13deg); }
+.sisyphus-figure.pose-airborne .s-leg-left .s-shin { transform: rotate(-16deg); }
+.sisyphus-figure.pose-airborne .s-leg-right { transform: rotate(-26deg); }
+.sisyphus-figure.pose-airborne .s-leg-right .s-shin { transform: rotate(50deg); }
+
+
+.sisyphus-figure.pose-slam .s-torso    { transform: translateX(-50%) rotate(0deg); transition: transform 0.04s; }
+.sisyphus-figure.pose-slam .s-arm-left  { transform: rotate(-39deg); transition: transform 0.04s; }
+.sisyphus-figure.pose-slam .s-arm-left .s-forearm { transform: rotate(-11deg); }
+.sisyphus-figure.pose-slam .s-arm-right { transform: rotate(-39deg); transition: transform 0.04s; }
+.sisyphus-figure.pose-slam .s-arm-right .s-forearm { transform: rotate(-10deg); }
+.sisyphus-figure.pose-slam .s-leg-left  { transform: rotate(-48deg); }
+.sisyphus-figure.pose-slam .s-leg-left .s-shin { transform: rotate(120deg); }
+.sisyphus-figure.pose-slam .s-leg-right { transform: rotate(-54deg); }
+.sisyphus-figure.pose-slam .s-leg-right .s-shin { transform: rotate(106deg); }
+
+
+.sisyphus-figure.pose-exhausted .s-torso    { transform: translateX(-50%) rotate(0deg); }
+.sisyphus-figure.pose-exhausted .s-arm-left  { transform: rotate(34deg); }
+.sisyphus-figure.pose-exhausted .s-arm-left .s-forearm { transform: rotate(-55deg); }
+.sisyphus-figure.pose-exhausted .s-arm-right { transform: rotate(-26deg); }
+.sisyphus-figure.pose-exhausted .s-arm-right .s-forearm { transform: rotate(43deg); }
+.sisyphus-figure.pose-exhausted .s-leg-left  { transform: rotate(-5deg); }
+.sisyphus-figure.pose-exhausted .s-leg-left .s-shin { transform: rotate(19deg); }
+.sisyphus-figure.pose-exhausted .s-leg-right { transform: rotate(-22deg); }
+.sisyphus-figure.pose-exhausted .s-leg-right .s-shin { transform: rotate(26deg); }
+.sisyphus-figure.pose-exhausted .s-head { opacity: 0.5; }
+
+
+.sisyphus-figure.pose-taunt .s-torso    { transform: translateX(-50%) rotate(0deg); }
+.sisyphus-figure.pose-taunt .s-arm-left  { transform: rotate(30deg); }
+.sisyphus-figure.pose-taunt .s-arm-left .s-forearm { transform: rotate(-43deg); }
+.sisyphus-figure.pose-taunt .s-arm-right { transform: rotate(-63deg); }
+.sisyphus-figure.pose-taunt .s-arm-right .s-forearm { transform: rotate(-97deg); }
+.sisyphus-figure.pose-taunt .s-leg-left  { transform: rotate(10deg); }
+.sisyphus-figure.pose-taunt .s-leg-left .s-shin { transform: rotate(-8deg); }
+.sisyphus-figure.pose-taunt .s-leg-right { transform: rotate(-10deg); }
+.sisyphus-figure.pose-taunt .s-leg-right .s-shin { transform: rotate(8deg); }
+
+
+.sisyphus-figure.parry-flash .s-head,
+.sisyphus-figure.parry-flash .s-torso,
+.sisyphus-figure.parry-flash .s-arm,
+.sisyphus-figure.parry-flash .s-forearm,
+.sisyphus-figure.parry-flash .s-leg,
+.sisyphus-figure.parry-flash .s-shin {
+  filter: brightness(3);
+  transition: filter 0.05s;
+}
+.sisyphus-figure.parryable::before {
+  content: '';
+  position: absolute;
+  inset: -16px;
+  border: 2px solid rgba(214, 201, 166, 0.72);
+  border-radius: 50%;
+  animation: parry-ring 0.3s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes parry-ring {
+  from { box-shadow: 0 0 8px rgba(214, 201, 166, 0.35), 0 0 14px rgba(255, 213, 79, 0.25); }
+  to   { box-shadow: 0 0 18px rgba(214, 201, 166, 0.65), 0 0 28px rgba(255, 213, 79, 0.55); }
+}
+.sisyphus-figure.unparryable::before {
+  content: '';
+  position: absolute;
+  inset: -16px;
+  border: 2px solid rgba(100,149,237,0.6);
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(100,149,237,0.5);
+  pointer-events: none;
+}
+
+
+.sisyphus-figure.death-shake {
+  animation: death-shake 0.05s linear infinite;
+}
+@keyframes death-shake {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-4px, 3px); }
+  50%  { transform: translate(3px, -4px); }
+  75%  { transform: translate(-3px, -2px); }
+  100% { transform: translate(4px, 2px); }
+}
+
+
+.sisyphus-figure.hitstun .s-head,
+.sisyphus-figure.hitstun .s-torso,
+.sisyphus-figure.hitstun .s-neck,
+.sisyphus-figure.hitstun .s-arm,
+.sisyphus-figure.hitstun .s-forearm,
+.sisyphus-figure.hitstun .s-leg,
+.sisyphus-figure.hitstun .s-shin,
+.sisyphus-figure.hitstun .s-fist,
+.sisyphus-figure.hitstun .s-foot {
+  filter: brightness(1.6) saturate(0.3);
+  transition: filter 0.02s;
+}
+
+
+
+
+.sisyphus-dashline {
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255,213,79,0.5), rgba(255,213,79,0.05));
+  pointer-events: none;
+  z-index: 147;
+  transform-origin: left center;
+  animation: dashline-fade 0.4s ease-out forwards;
+}
+@keyframes dashline-fade {
+  to { opacity: 0; }
+}
+
+
+.sisyphus-charge-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ffd54f;
+  box-shadow: 0 0 6px rgba(255,213,79,0.6);
+  pointer-events: none;
+  z-index: 149;
+  animation: charge-converge var(--dur, 0.6s) ease-in forwards;
+}
+@keyframes charge-converge {
+  from { opacity: 0.8; transform: translate(var(--sx, 0), var(--sy, 0)) scale(1); }
+  to   { opacity: 0;   transform: translate(0, 0) scale(0.2); }
+}
+
+
+.sisyphus-shockwave {
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid rgba(214, 201, 166, 0.82);
+  box-shadow: 0 0 12px rgba(214, 201, 166, 0.42), 0 0 22px rgba(255, 213, 79, 0.24);
+  pointer-events: none;
+  z-index: 149;
+  animation: shockwave-expand 0.5s ease-out forwards;
+}
+@keyframes shockwave-expand {
+  from { width: 10px; height: 10px; opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+  to   { width: 300px; height: 300px; opacity: 0; transform: translate(-50%, -50%) scale(1); }
+}
+.sisyphus-shockwave.large {
+  animation: shockwave-expand-large 0.6s ease-out forwards;
+}
+@keyframes shockwave-expand-large {
+  from { width: 10px; height: 10px; opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+  to   { width: 500px; height: 500px; opacity: 0; transform: translate(-50%, -50%) scale(1); }
+}
+
+
+.sisyphus-vshock {
+  position: absolute;
+  width: 6px;
+  height: 0;
+  background: linear-gradient(180deg, rgba(255,213,79,0), rgba(255,213,79,0.9), rgba(255,213,79,0));
+  box-shadow: 0 0 16px rgba(255,213,79,0.6);
+  pointer-events: none;
+  z-index: 149;
+  animation: vshock-expand 0.4s ease-out forwards;
+}
+@keyframes vshock-expand {
+  from { height: 0; opacity: 1; }
+  to   { height: 100vh; opacity: 0; }
+}
+
+
+.sisyphus-glint {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff, #ffd54f);
+  box-shadow: 0 0 20px 8px rgba(255,213,79,0.8);
+  pointer-events: none;
+  z-index: 149;
+  animation: glint-pulse 0.6s ease-in-out;
+}
+@keyframes glint-pulse {
+  0%   { transform: translate(-50%,-50%) scale(0.5); opacity: 1; }
+  60%  { transform: translate(-50%,-50%) scale(1.2); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(0.3); opacity: 0.8; }
+}
+
+
+.sisyphus-sparkle-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff, #ffd54f);
+  box-shadow: 0 0 8px 3px rgba(255,213,79,0.7);
+  pointer-events: none;
+  z-index: 149;
+  animation: sparkle-drift 0.5s ease-out forwards;
+}
+@keyframes sparkle-drift {
+  0%   { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(0.2); opacity: 0; }
+}
+
+.sisyphus-blood-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, #c62828, #8b0000);
+  pointer-events: none;
+  z-index: 149;
+  transform: translate(-50%, -50%);
+  animation: sisyphus-blood-splurt 0.5s ease-out forwards;
+}
+@keyframes sisyphus-blood-splurt {
+  0%   { opacity: 1; transform: translate(-50%, -50%) translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) scale(0.3); }
+}
+
+.sisyphus-blood-pool {
+  position: absolute;
+  width: var(--pool-w, 6px);
+  height: var(--pool-h, 6px);
+  border-radius: 50%;
+  background: radial-gradient(circle, #c62828, #8b0000);
+  pointer-events: none;
+  z-index: 149;
+  transform: translate(-50%,-50%);
+  animation: sisyphus-blood-pool-fade 1.25s ease-out forwards;
+}
+@keyframes sisyphus-blood-pool-fade {
+  0%   { opacity: 0.82; transform: translate(-50%,-50%) scale(0.75); }
+  20%  { opacity: 0.92; transform: translate(-50%,-50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%,-50%) scale(1.1); }
+}
+
+
+.sisyphus-explosion {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,1), rgba(255,213,79,0.9) 30%, rgba(255,152,0,0.5) 60%, rgba(198,40,40,0.3) 80%, transparent);
+  pointer-events: none;
+  z-index: 149;
+  animation: explosion-pop 0.5s ease-out forwards;
+  box-shadow: 0 0 60px 30px rgba(255,200,50,0.6);
+}
+
+.sisyphus-explosion.soft {
+  background: radial-gradient(circle, rgba(255,255,255,0.6), rgba(255,213,79,0.4) 40%, transparent 70%);
+  box-shadow: 0 0 15px 8px rgba(255,200,50,0.2);
+  animation: explosion-pop-soft 0.35s ease-out forwards;
+}
+@keyframes explosion-pop-soft {
+  0%   { transform: translate(-50%,-50%) scale(0.2); opacity: 0.7; }
+  100% { transform: translate(-50%,-50%) scale(1); opacity: 0; }
+}
+@keyframes explosion-pop {
+  0%   { transform: translate(-50%,-50%) scale(0.1); opacity: 1; }
+  30%  { transform: translate(-50%,-50%) scale(1.1); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(1.2); opacity: 0; }
+}
+.sisyphus-explosion.huge {
+  animation: explosion-pop-huge 0.9s ease-out forwards;
+  box-shadow: 0 0 140px 80px rgba(255,200,50,0.8), 0 0 250px 120px rgba(255,100,20,0.4);
+}
+@keyframes explosion-pop-huge {
+  0%   { transform: translate(-50%,-50%) scale(0.1); opacity: 1; }
+  15%  { transform: translate(-50%,-50%) scale(1.4); opacity: 1; }
+  40%  { transform: translate(-50%,-50%) scale(1.2); opacity: 0.9; }
+  60%  { transform: translate(-50%,-50%) scale(1.7); opacity: 0.6; }
+  100% { transform: translate(-50%,-50%) scale(2.0); opacity: 0; }
+}
+
+
+.sisyphus-phase-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 300;
+  background: rgba(255,82,82,0.4);
+  pointer-events: none;
+  animation: phase-flash 0.6s ease-out forwards;
+}
+@keyframes phase-flash {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+
+.sisyphus-trail {
+  position: absolute;
+  width: 60px;
+  height: 120px;
+  z-index: 148;
+  pointer-events: none;
+  opacity: 0.4;
+  animation: trail-fade 0.3s ease-out forwards;
+}
+@keyframes trail-fade {
+  to { opacity: 0; }
+}
+.sisyphus-trail .s-head,
+.sisyphus-trail .s-torso,
+.sisyphus-trail .s-neck,
+.sisyphus-trail .s-arm,
+.sisyphus-trail .s-forearm,
+.sisyphus-trail .s-leg,
+.sisyphus-trail .s-shin {
+  background: rgba(255,213,79,0.3) !important;
+  box-shadow: none !important;
+}
+.sisyphus-trail .s-fist,
+.sisyphus-trail .s-foot { opacity: 0.3; }
+
+
+.sisyphus-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 250;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.5);
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+}
+.sisyphus-overlay.show { opacity: 1; }
+.sisyphus-overlay .result-text {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  font-size: clamp(24px, 5vw, 52px);
+  text-align: center;
+  padding: 20px;
+  line-height: 1.4;
+}
+.sisyphus-overlay .result-text.victory { color: #ffd54f; text-shadow: 0 0 20px rgba(255,213,79,0.8); }
+.sisyphus-overlay .result-text.defeat  { color: #ff5252; text-shadow: 0 0 20px rgba(255,82,82,0.8); }
+
+
+.sisyphus-dmg {
+  position: absolute;
+  z-index: 202;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: #ffd54f;
+  text-shadow: 0 0 6px rgba(0,0,0,0.8);
+  pointer-events: none;
+  animation: dmg-float 0.8s ease-out forwards;
+}
+.sisyphus-dmg.parry-dmg {
+  font-size: 28px;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255,213,79,0.9);
+}
+@keyframes dmg-float {
+  0%   { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-40px) scale(0.7); }
+}
+
+
+.sisyphus-attack-trail {
+  position: absolute;
+  height: 4px;
+  background: linear-gradient(90deg, rgba(200,0,0,0.9), rgba(255,50,50,0.6));
+  box-shadow: 0 0 8px 2px rgba(200,0,0,0.5), 0 0 16px 4px rgba(255,0,0,0.2);
+  border-radius: 2px;
+  transform-origin: left center;
+  z-index: 148;
+  pointer-events: none;
+  animation: attack-trail-fade 0.4s ease-out forwards;
+}
+@keyframes attack-trail-fade {
+  0%   { opacity: 1; height: 4px; }
+  50%  { opacity: 0.7; height: 3px; }
+  100% { opacity: 0; height: 1px; }
+}

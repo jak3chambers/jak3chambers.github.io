@@ -1,0 +1,838 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="src/elliebugs/elliebug29.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+    <title>28 Awesome Bugs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/meteor-shower.css">
+    <link rel="stylesheet" href="styles/googly-eyes.css">
+    <link rel="stylesheet" href="styles/walk-mode.css">
+    <link rel="stylesheet" href="styles/time-warp.css">
+    <link rel="stylesheet" href="styles/bomb-defusal.css">
+    <link rel="stylesheet" href="styles/horsemen.css">
+    <link rel="stylesheet" href="styles/sisyphus.css">
+    <link rel="stylesheet" href="styles/panopticon.css">
+    <link href="../fonts.googleapis.com/css2/family=Roboto_wght@400;500;700&amp;display=swap.css" rel="stylesheet">
+    <link href="../fonts.googleapis.com/css2/family=Balsamiq+Sans&amp;family=Patrick+Hand&amp;family=Architects+Daughter&amp;display=swap.css" rel="stylesheet">        <script src="scripts/dev-config.js"></script>
+    <script src="scripts/music-boot.js"></script>
+</head>
+<body class="theme-light has-news-ticker">
+    
+    <div id="news-ticker" class="news-ticker" aria-live="polite" aria-atomic="true">
+        <div class="news-ticker-content">
+            <div class="network-icon-container">
+                <div class="network-icon">BNN</div>
+            </div>
+            <div class="news-marquee">
+                <div class="news-track">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <header class="header-collapsed">
+        <div class="header-scroll-row">
+            <div class="header-row-top">
+                <div class="site-branding" role="banner" aria-label="Site branding">
+                    <a class="brand">
+                        <img class="brand-logo" src="src/bug1.png" alt="28 Awesome Bugs logo">
+                        <div class="brand-text">
+                            <h1>28awesomebugs.org</h1>
+                            <p class="brand-tagline">the coolest place on the internet :)</p>
+                        </div> 
+                    </a>
+                </div>
+
+                <div class="account-section" id="account-section" style="display:none"></div>
+
+                <div class="button-group account" aria-label="User Info" data-label="User Info">
+                    <button id="login-btn" class="nav-btn account-btn">Log In</button>
+                    <span id="user-display-name" class="user-display-name" style="display:none"></span>
+                    <span class="nav-profile-wrap" style="display:none;position:relative">
+                        <a href="index.html" id="profile-settings-link" class="nav-btn account-btn">Profile</a>
+                        <span id="nav-friend-badge" class="nav-friend-badge" style="display:none"></span>
+                    </span>
+                    <button id="logout-btn" class="nav-btn account-btn" style="display:none">Log Out</button>
+                    <a href="https://discord.gg/YW2eDgxmGj" target="_blank" class="nav-btn account-btn">Join Discord</a>
+                </div>
+
+                <div class="button-group nav" aria-label="Navigation" data-label="Navigation">
+                    <a href="games.html" id="games-button" class="nav-btn">Games</a>
+                    <!--<a href="bug-os/" id="bugos-button" class="nav-btn">BugOS</a>-->
+                    <a href="education.html" id="education-button" class="nav-btn">Bug Encyclopedia</a>
+                    <a href="polls.html" id="polls-button" class="nav-btn">Bug Polls</a>
+                    <a href="rockpile.html" id="rockpile-button" class="nav-btn">Rock Pile</a>
+                    <a href="merch.html" id="merch-button" class="nav-btn">Merch Store</a>
+                    
+                    <a href="forum.html" class="nav-btn">Community</a>
+                    <a href="https://ko-fi.com/28awesomebugsdotorg" target="_blank" class="nav-btn">Support</a>
+                </div>
+            </div>
+
+            <div class="header-row-bottom">
+                <div class="button-tray" role="toolbar" aria-label="Site controls and navigation">
+                    <div class="button-group primary" aria-label="Simulation controls" data-label="Simulation">
+                        <button id="gross-mode-btn">True Form</button>
+                        <button id="toggle-freeze">Freeze Bugs</button>
+                        <button id="toggle-spin">Mike mode</button>
+                        <button id="awesome-mode">Awesome Mode</button>
+                        <button id="drop-nuke">Nuke</button>
+                        <button id="destroy-button">Death</button>
+                        <button id="create-button">Life</button>
+                        <button id="green-button">Green Button</button>
+                        <button id="evil-mode-button">Evil Mode</button>
+                        <button id="spawn-rock-button">Rock</button>
+                        <button id="hat-button">Hats On</button>
+                        <button id="drag-mode-button">Drag Mode On</button>
+                        <button id="info-mode-button">Info On</button>
+                    </div>
+                    <div class="button-group actions" aria-label="Actions and modes" data-label="Modes &amp; Tools">
+                        <div class="wheel-btn-wrap">
+                            <button id="awesome-wheel-btn">Wheel of Awesome</button>
+                            <div id="wheel-effect-indicator" class="wheel-effect-indicator" hidden=""></div>
+                        </div>
+                        <button id="panop-terminal-btn">Terminal</button>
+                        <button id="feedback-button">Feedback</button>
+                        <button id="bug-shop-btn">Bug Shop</button>
+                        <button id="shop-open-btn">Shop</button>
+                        <button id="theme-shop-btn">Themes</button>
+                        <button id="music-shop-btn">Music</button>
+                        <button id="settings-btn">Settings</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-row-toggle" id="header-toggle" role="button" aria-label="Toggle toolbar layout" tabindex="0">
+            <span class="toggle-pill"></span>
+        </div>
+    </header>
+    
+    
+    <div id="volume-bar-container" class="volume-bar-container" style="display: none;">
+        <div class="volume-bar-label">Microphone Level</div>
+        <div class="volume-bar-track">
+            <div id="volume-bar-fill" class="volume-bar-fill"></div>
+        </div>
+    </div>
+    
+    <main>
+        <div class="bugs-container">
+            
+        </div>
+    </main>
+    <div id="sim-shop-modal" class="modal">
+        <div class="modal-content shop-modal">
+            <span class="close-button" id="sim-shop-close">×</span>
+            <div class="modal-header shop-modal-header" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                <h2 style="margin:0">Bug Simulation Shop</h2>
+                <div class="balance shop-balance" style="display:flex;align-items:center;gap:6px;font-weight:600">
+                    <img src="src/penny.png" alt="Coin" class="coin-icon" style="width:20px;height:20px">
+                    <span id="coin-count">0</span>
+                </div>
+            </div>
+            <div id="sim-shop-items"></div>
+        </div>
+    </div>
+    <div id="music-shop-modal" class="modal">
+        <div class="modal-content shop-modal">
+            <span class="close-button" id="music-shop-close">×</span>
+            <div class="modal-header shop-modal-header" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                <h2 style="margin:0">Music Tracks</h2>
+                <div class="balance shop-balance" style="display:flex;align-items:center;gap:6px;font-weight:600">
+                    <img src="src/penny.png" alt="Coin" class="coin-icon" style="width:20px;height:20px">
+                    <span id="music-coin-count">0</span>
+                </div>
+            </div>
+            <div id="music-shop-items"></div>
+            <div id="music-extra-controls" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"></div>
+        </div>
+    </div>
+    <div id="bug-shop-modal" class="modal">
+        <div class="modal-content shop-modal">
+            <span class="close-button" id="bug-shop-close">×</span>
+            <div class="modal-header shop-modal-header" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                <h2 style="margin:0">Bug Shop</h2>
+                <div class="balance shop-balance" style="display:flex;align-items:center;gap:6px;font-weight:600">
+                    <img src="src/penny.png" alt="Coin" class="coin-icon" style="width:20px;height:20px">
+                    <span id="bug-coin-count">0</span>
+                </div>
+            </div>
+            <div id="bug-shop-items"></div>
+        </div>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="theme-shop-modal" class="modal">
+        <div class="modal-content shop-modal">
+            <span class="close-button" id="theme-shop-close">×</span>
+            <div class="modal-header shop-modal-header" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                <h2 style="margin:0">Theme Shop</h2>
+                <div class="balance shop-balance" style="display:flex;align-items:center;gap:6px;font-weight:600">
+                    <img src="src/penny.png" alt="Coin" class="coin-icon" style="width:20px;height:20px">
+                    <span id="theme-coin-count">0</span>
+                </div>
+            </div>
+            <div id="theme-shop-items"></div>
+        </div>
+    </div>
+
+    
+    <div id="auth-modal" class="modal">
+        <div class="modal-content auth-modal-content">
+            <span class="close-button" id="auth-modal-close">×</span>
+
+            
+            <div id="auth-login-tab">
+                <h2 style="margin:0 0 16px">Log In</h2>
+                <div id="login-error" class="auth-error" style="display:none"></div>
+                <form id="login-form" onsubmit="return false">
+                <label class="auth-label">Username or email
+                    <input type="text" id="login-username" class="auth-input" autocomplete="username" maxlength="254">
+                </label>
+                <label class="auth-label">Password
+                    <input type="password" id="login-password" class="auth-input" autocomplete="current-password">
+                </label>
+                <button id="login-submit" class="auth-btn" type="button">Log In</button>
+                </form>
+                <p class="auth-switch">Don't have an account? <a href="index.html" id="show-signup">Sign up</a></p>
+                <p class="auth-switch"><a href="index.html" id="show-forgot">Forgot password?</a></p>
+            </div>
+
+            
+            <div id="auth-signup-tab" style="display:none">
+                <h2 style="margin:0 0 16px">Sign Up</h2>
+                <div id="signup-error" class="auth-error" style="display:none"></div>
+                <form id="signup-form" onsubmit="return false">
+                <label class="auth-label">Username <span class="auth-hint">(3-20 chars, letters/numbers/underscore)</span>
+                    <input type="text" id="signup-username" class="auth-input" autocomplete="username" maxlength="20">
+                </label>
+                <label class="auth-label">Password <span class="auth-hint">(8+ characters)</span>
+                    <input type="password" id="signup-password" class="auth-input" autocomplete="new-password">
+                </label>
+                <label class="auth-label">Confirm Password
+                    <input type="password" id="signup-password-confirm" class="auth-input" autocomplete="new-password">
+                </label>
+                <label class="auth-label">Email <span class="auth-hint">(optional if you want password recovery)</span>
+                    <input type="email" id="signup-email" class="auth-input" autocomplete="email">
+                </label>
+                <label class="auth-checkbox-label">
+                    <input type="checkbox" id="signup-terms">
+                    I agree to the <a href="index.html" id="show-terms-link">Terms &amp; Conditions</a>
+                </label>
+                <button id="signup-submit" class="auth-btn" type="button">Create Account</button>
+                </form>
+                <p class="auth-switch">Already have an account? <a href="index.html" id="show-login">Log in</a></p>
+            </div>
+
+            
+            <div id="auth-forgot-tab" style="display:none">
+                <h2 style="margin:0 0 16px">Reset Password</h2>
+                <div id="forgot-error" class="auth-error" style="display:none"></div>
+                <div id="forgot-success" class="auth-hint" style="display:none;margin-bottom:12px"></div>
+                <label class="auth-label">Username or email
+                    <input type="text" id="forgot-username" class="auth-input" autocomplete="username" maxlength="254">
+                </label>
+                <button id="forgot-submit" class="auth-btn">Send Reset Link</button>
+                <p class="auth-switch"><a href="index.html" id="forgot-back-login">Back to login</a></p>
+            </div>
+
+            
+            <div id="auth-terms-tab" style="display:none">
+                <h2 style="margin:0 0 16px">Terms &amp; Conditions</h2>
+                <div class="auth-terms-text">
+                    <p><strong>28awesomebugs.org Account Terms</strong></p>
+                    <ul>
+                        <li>You must be at least 13 years old to create an account.</li>
+                        <li>Your username must not contain profanity, slurs, or impersonate others, including me or 29awesomebugs.</li>
+                        <li>Uploaded content (playdate bugs, forum) must follow community guidelines. I might allow messages with profanity if they are funny. Slurs will not be allowed under any exception.</li>
+                        <li>I can and will delete any account violating these terms, specifically rules around slurs.</li>
+                        <li>Your progress is saved to the server and locally. Info like coins, bugs caught, playground bubby, etc. are stored. I do NOT sell that data or use it in ANY other way.</li>
+                        <li>Password recovery requires an email address. Without one, lost passwords cannot be recovered. Unless you write me a 1 page paper on how sorry you are for forgetting your password and the steps you will take to prevent it from happening again and email it to me.</li>
+                        <li>I reserve the right to modify these terms. Continued use constitutes acceptance.</li>
+                        <li>Most importantly, have fun.</li>
+                    </ul>
+                </div>
+                <button id="terms-back" class="auth-btn">Back</button>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="profile-modal" class="modal">
+        <div class="modal-content profile-modal-content">
+            <span class="close-button" id="profile-modal-close">×</span>
+
+            
+            <div class="profile-hero">
+                <div class="profile-avatar-wrap" id="profile-avatar-wrap">
+                    <img id="profile-avatar-img" class="profile-avatar-img" src="" alt="Avatar">
+                </div>
+                <div class="profile-hero-name" id="profile-username"></div>
+                <button id="profile-change-name-btn" class="profile-hero-link">Change Name</button>
+                <div id="profile-change-name-wrap" style="display:none">
+                    <input type="text" id="profile-new-name" class="auth-input profile-name-input" placeholder="New username" maxlength="20">
+                    <div class="profile-change-name-actions">
+                        <button id="profile-save-name" class="auth-btn profile-btn-inline">Save</button>
+                        <button id="profile-cancel-name" class="auth-btn profile-btn-inline">Cancel</button>
+                    </div>
+                </div>
+                <div id="profile-error" class="auth-error" style="display:none"></div>
+                <div id="profile-success" class="auth-success" style="display:none"></div>
+            </div>
+
+            <div id="profile-tags" class="profile-tags"></div>
+
+            
+            <div id="avatar-picker" class="avatar-picker" style="display:none">
+                <h3 class="avatar-picker-title">Choose Your Bug</h3>
+                <div class="avatar-picker-tabs">
+                    <button class="avatar-tab active" data-tab="bugs">Bugs</button>
+                    <button class="avatar-tab" data-tab="elliebugs">Cooler Bugs</button>
+                    <button class="avatar-tab" data-tab="banner">Banner</button>
+                    <button class="avatar-tab" data-tab="name-color">Name Color</button>
+                </div>
+                <div class="avatar-grid" id="avatar-grid"></div>
+                <div id="color-picker-wrap" style="display:none"></div>
+                <div class="avatar-picker-actions">
+                    <button id="avatar-cancel" class="auth-btn" type="button">Cancel</button>
+                </div>
+            </div>
+
+            
+            <div class="profile-sections">
+                <div class="profile-top-btns">
+                    <button id="profile-friends-btn" class="auth-btn profile-friends-btn">Friends <span id="profile-friends-count" class="profile-friends-count"></span><span id="profile-friends-btn-badge" class="friends-request-badge" style="display:none"></span></button>
+                    <button id="profile-customize-btn" class="auth-btn profile-customize-btn">Customization</button>
+                </div>
+
+                
+                <div class="profile-section">
+                    <button class="profile-section-toggle" data-section="bio-section">
+                        Bio
+                        <span class="profile-section-arrow">▾</span>
+                    </button>
+                    <div class="profile-section-body" id="bio-section">
+                        <textarea id="profile-bio" class="auth-input profile-bio-input" maxlength="300" rows="3" placeholder="Tell everyone a little about yourself..."></textarea>
+                        <div class="profile-bio-footer">
+                            <span class="profile-bio-count"><span id="profile-bio-count">0</span>/300</span>
+                            <button id="profile-update-bio" class="auth-btn profile-btn-inline">Save Bio</button>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="profile-section">
+                    <button class="profile-section-toggle" data-section="account-section">
+                        Account Settings
+                        <span class="profile-section-arrow">▾</span>
+                    </button>
+                    <div class="profile-section-body profile-section-collapsed" id="account-section">
+                        <div class="profile-field-group">
+                            <label class="profile-field-label">Update Email</label>
+                            <div class="profile-field-row">
+                                <input type="email" id="profile-email" class="auth-input" autocomplete="email" placeholder="your@email.com">
+                                <button id="profile-update-email" class="auth-btn profile-btn-inline">Save</button>
+                            </div>
+                        </div>
+                        <div class="profile-field-group">
+                            <label class="profile-field-label">Change Password</label>
+                            <form id="profile-pw-form" onsubmit="return false" class="profile-pw-form">
+                                <input type="text" id="profile-pw-username" autocomplete="username" style="display:none">
+                                <input type="password" id="profile-current-pw" class="auth-input" autocomplete="current-password" placeholder="Current password">
+                                <input type="password" id="profile-new-pw" class="auth-input" autocomplete="new-password" placeholder="New password (8+ chars)">
+                                <button id="profile-change-pw" class="auth-btn profile-btn-inline" type="button">Update Password</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="profile-section">
+                    <button class="profile-section-toggle" data-section="tags-section">
+                        Tags
+                        <span class="profile-section-arrow">▾</span>
+                    </button>
+                    <div class="profile-section-body" id="tags-section">
+                        
+                    </div>
+                </div>
+
+                
+                <div class="profile-section">
+                    <button class="profile-section-toggle" data-section="showcase-section">
+                        Showcase
+                        <span class="profile-section-arrow">▾</span>
+                    </button>
+                    <div class="profile-section-body profile-section-collapsed" id="showcase-section">
+                        <p class="showcase-desc">Pick stats to display on your public profile. You start with 1 free slot and can unlock more!</p>
+                        <div id="showcase-slots-container"></div>
+                        <div id="showcase-buy-slots"></div>
+                    </div>
+                </div>
+
+                
+                <div class="profile-section">
+                    <button class="profile-section-toggle" data-section="cloud-section">
+                        Cloud Save
+                        <span class="profile-section-arrow">▾</span>
+                    </button>
+                    <div class="profile-section-body profile-section-collapsed" id="cloud-section">
+                        <div class="profile-cloud-btns">
+                            <button id="profile-save-now" class="auth-btn">Save Progress Now</button>
+                            <button id="profile-load-now" class="auth-btn">Load Cloud Save</button>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="profile-section profile-section-danger">
+                    <button class="profile-section-toggle" data-section="danger-section">
+                        Deletion
+                        <span class="profile-section-arrow">▾</span>
+                    </button>
+                    <div class="profile-section-body profile-section-collapsed" id="danger-section">
+                        <p class="profile-danger-text">This action is permanent and cannot be undone.</p>
+                        <button id="profile-delete-account" class="auth-btn auth-btn-danger">Delete My Account</button>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div id="profile-friends-panel" class="friends-panel" style="display:none">
+                <div class="friends-panel-header">
+                    <button id="friends-panel-back" class="friends-back-btn">← Back</button>
+                    <h3 class="friends-panel-title">Friends</h3>
+                </div>
+                <div class="friends-panel-tabs">
+                    <button class="friends-tab active" data-ftab="list">Friends</button>
+                    <button class="friends-tab" data-ftab="requests">
+                        Requests
+                        <span id="friends-request-badge" class="friends-request-badge" style="display:none"></span>
+                    </button>
+                </div>
+                <div id="friends-tab-content" class="friends-tab-content"></div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="pub-profile-modal" class="modal">
+        <div class="modal-content profile-modal-content">
+            <span class="close-button" id="pub-profile-close">×</span>
+            <div class="profile-hero" id="pub-profile-hero">
+                <div class="profile-avatar-wrap">
+                    <img id="pub-profile-avatar" class="profile-avatar-img" src="" alt="Avatar">
+                </div>
+                <div class="pub-profile-name-row">
+                    <div class="profile-hero-name" id="pub-profile-username"></div>
+                    <div class="pub-profile-friend-count" id="pub-profile-friend-count"></div>
+                </div>
+                <button id="pub-profile-friend-btn" class="auth-btn pub-profile-friend-btn" style="display:none"></button>
+            </div>
+            <div id="pub-profile-tags" class="profile-tags"></div>
+            <div id="pub-profile-bio" class="pub-profile-bio"></div>
+            <div id="pub-profile-showcase" class="pub-profile-showcase"></div>
+            <div id="pub-profile-posts" class="pub-profile-posts"></div>
+            <div class="pub-profile-bug-actions" id="pub-profile-bug-actions">
+                <button id="pub-profile-creator-btn" class="auth-btn pub-profile-creator-btn" style="display:none"></button>
+                <button id="pub-profile-beckon-btn" class="auth-btn pub-profile-beckon-btn" style="display:none"></button>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="save-conflict-modal" class="modal">
+        <div class="modal-content auth-modal-content" style="max-width:460px">
+            <h2 style="margin:0 0 12px">Overlapping Saves Detected</h2>
+            <p style="margin:0 0 16px;opacity:0.85">Both local and cloud saves exist. Which would you like to keep?</p>
+            <div class="save-conflict-options">
+                <button id="conflict-use-local" class="save-conflict-btn">
+                    <strong>Use Local Save</strong>
+                    <span id="conflict-local-date" class="save-conflict-date"></span>
+                </button>
+                <button id="conflict-use-cloud" class="save-conflict-btn">
+                    <strong>Use Cloud Save</strong>
+                    <span id="conflict-cloud-date" class="save-conflict-date"></span>
+                </button>
+            </div>
+        </div>
+    </div>    <script src="data/bug-roster.js"></script>    <script src="scripts/save-compress.js"></script><script src="scripts/account-sync.js"></script>    <script src="scripts/bug-data_v=20260909e.js"></script>    <script src="scripts/stat-showcase_v=20260909f.js"></script>    <script src="scripts/profile-modal.js"></script>    <script src="scripts/profile-viewer.js"></script>    <script src="scripts/bug-misc-stats.js"></script>    <script src="scripts/bug-ui.js"></script>    <script src="scripts/settings.js"></script>    <script src="scripts/welcome.js"></script>    <script>
+    (function() {
+        var pool = window.BugData ? window.BugData.getFullBugImagePool() : [];
+        // Fisher-Yates shuffle
+        for (var i = pool.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+        }
+        var chosen = pool.slice(0, 28);
+        var container = document.querySelector('.bugs-container');
+        if (container) {
+            chosen.forEach(function(src) {
+                var img = document.createElement('img');
+                img.src = src;
+                img.alt = 'Bug';
+                img.className = 'bug';
+                img.loading = 'lazy';
+                container.appendChild(img);
+            });
+        }
+    })();
+    </script>    <script src="scripts/achievement-tracker.js"></script>    <script src="scripts/script_v=20260909e.js"></script>    <script src="scripts/shop_v=20260909b.js" defer=""></script>    <script src="scripts/music-shop_v=20260909b.js" defer=""></script>    <script src="scripts/bug-shop_v=20260909b.js" defer=""></script>    <script src="scripts/theme-shop_v=20260909b.js" defer=""></script>    <script src="scripts/games-shop_v=20260909b.js" defer=""></script>    <script src="../cdnjs.cloudflare.com/ajax/libs/p2.js/0.6.0/p2.min.js" defer=""></script>    <script src="scripts/wheel_v=20260909b.js" defer=""></script>    <script src="scripts/meteor-shower.js" defer=""></script>    <script src="scripts/googly-eyes.js" defer=""></script>    <script src="scripts/walk-mode.js" defer=""></script>    <script src="scripts/time-warp.js" defer=""></script>        <script src="scripts/bomb-defusal.js" defer=""></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var btn = document.getElementById('bomb-defusal-btn');
+            if (btn) {
+                btn.addEventListener('click', function() {
+                    if (typeof BombDefusal !== 'undefined') {
+                        BombDefusal.startRandom();
+                    }
+                });
+            }
+        });
+    </script>
+    <script src="scripts/horsemen.js" defer=""></script>    <script src="scripts/panopticon.js" defer=""></script>    <script src="scripts/panop-terminal.js" defer=""></script>    <script src="scripts/sisyphus.js" defer=""></script>    <script>
+    (function() {
+        var SECRET = 'theedgiesttaco';
+        var STORAGE_KEY = '28bugs_secretTacoClaimed';
+        var COIN_KEY = '28bugs_gameCoins';
+        var typed = '';
+
+        document.addEventListener('keydown', function(e) {
+            if (localStorage.getItem(STORAGE_KEY)) return;
+            if (e.key.length !== 1) return;
+            typed += e.key.toLowerCase();
+            if (typed.length > SECRET.length) {
+                typed = typed.slice(typed.length - SECRET.length);
+            }
+            if (typed === SECRET) {
+                typed = '';
+                showSecretReward();
+            }
+        });
+
+        function showSecretReward() {
+            try {
+                var snd = new Audio('src/party.mp3');
+                snd.volume = 0.5;
+                snd.play();
+            } catch(ex) {}
+
+            var overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:99999;display:flex;align-items:center;justify-content:center;';
+
+            var box = document.createElement('div');
+            box.style.cssText = 'background:var(--panel-bg-start, #fff);border:2px solid var(--panel-border, rgba(0,0,0,0.05));border-radius:10px;padding:36px 44px;text-align:center;color:var(--ink, #1b2838);font-family:inherit;max-width:400px;';
+
+            var msg = document.createElement('p');
+            msg.textContent = 'Ha ha wow cool here you go i guess';
+            msg.style.cssText = 'font-size:1.3rem;margin:0 0 24px 0;color:var(--ink, #1b2838);';
+
+            var btn = document.createElement('button');
+            btn.innerHTML = '<img src="src/penny.png" alt="Coin" style="width:20px;height:20px;vertical-align:middle;margin-right:6px"/>100,000 Coins';
+            btn.style.cssText = 'font-size:1.2rem;padding:14px 32px;border:2px solid var(--panel-border, rgba(0,0,0,0.1));border-radius:10px;background:var(--panel-accent, #4f8cff);color:var(--panel-accent-contrast, #fff);cursor:pointer;font-weight:700;transition:transform 0.15s;';
+            btn.onmouseenter = function() { btn.style.transform = 'scale(1.07)'; };
+            btn.onmouseleave = function() { btn.style.transform = 'scale(1)'; };
+
+            btn.onclick = function() {
+                if (typeof GameCoins !== 'undefined' && GameCoins.addCoins) {
+                    GameCoins.addCoins(100000);
+                } else {
+                    var current = parseInt(localStorage.getItem(COIN_KEY) || '0', 10) || 0;
+                    localStorage.setItem(COIN_KEY, String(current + 100000));
+                }
+                localStorage.setItem(STORAGE_KEY, 'true');
+                if (typeof GameCoins !== 'undefined' && GameCoins.updateCoinDisplay) GameCoins.updateCoinDisplay();
+                overlay.remove();
+            };
+
+            box.appendChild(msg);
+            box.appendChild(btn);
+            overlay.appendChild(box);
+            document.body.appendChild(overlay);
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) overlay.remove();
+            });
+        }
+    })();
+    </script>
+
+        <script>
+    (function() {
+        var API_BASE = 'https://api.28awesomebugs.org';
+
+        // --- Element refs ---
+        var loginBtn = document.getElementById('login-btn');
+        var displayName = document.getElementById('user-display-name');
+        var logoutBtn = document.getElementById('logout-btn');
+        var profileLink = document.getElementById('profile-settings-link');
+        var profileLinkWrap = profileLink ? (profileLink.closest('.nav-profile-wrap') || profileLink) : null;
+
+        // Auth modal
+        var authModal = document.getElementById('auth-modal');
+        var authClose = document.getElementById('auth-modal-close');
+        var loginTab = document.getElementById('auth-login-tab');
+        var signupTab = document.getElementById('auth-signup-tab');
+        var forgotTab = document.getElementById('auth-forgot-tab');
+        var termsTab = document.getElementById('auth-terms-tab');
+
+        // Save conflict modal
+        var conflictModal = document.getElementById('save-conflict-modal');
+
+        // --- Helpers ---
+        function showTab(tab) {
+            [loginTab, signupTab, forgotTab, termsTab].forEach(function(t) { t.style.display = 'none'; });
+            tab.style.display = '';
+        }
+        function openModal(modal) { modal.style.display = 'block'; }
+        function closeModal(modal) { modal.style.display = 'none'; }
+        function showError(el, msg) { el.textContent = msg; el.style.display = ''; }
+        function hideError(el) { el.style.display = 'none'; }
+
+        function updateHeaderUI(user) {
+            if (user) {
+                loginBtn.style.display = 'none';
+                displayName.style.display = '';
+                displayName.textContent = user.username;
+                profileLinkWrap.style.display = '';
+                logoutBtn.style.display = '';
+            } else {
+                loginBtn.style.display = '';
+                displayName.style.display = 'none';
+                displayName.textContent = '';
+                profileLinkWrap.style.display = 'none';
+                logoutBtn.style.display = 'none';
+            }
+        }
+
+        // --- Tab switching ---
+        document.getElementById('show-signup').addEventListener('click', function(e) { e.preventDefault(); showTab(signupTab); });
+        document.getElementById('show-login').addEventListener('click', function(e) { e.preventDefault(); showTab(loginTab); });
+        document.getElementById('show-forgot').addEventListener('click', function(e) { e.preventDefault(); showTab(forgotTab); });
+        document.getElementById('show-terms-link').addEventListener('click', function(e) { e.preventDefault(); showTab(termsTab); });
+        document.getElementById('terms-back').addEventListener('click', function() { showTab(signupTab); });
+        document.getElementById('forgot-back-login').addEventListener('click', function(e) { e.preventDefault(); showTab(loginTab); });
+
+        // --- Open / Close modals ---
+        loginBtn.addEventListener('click', function() { showTab(loginTab); openModal(authModal); });
+        authClose.addEventListener('click', function() { closeModal(authModal); });
+        authModal.addEventListener('click', function(e) { if (e.target === authModal) closeModal(authModal); });
+
+        profileLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (ProfileModal) ProfileModal.open();
+        });
+        conflictModal.addEventListener('click', function(e) { if (e.target === conflictModal) closeModal(conflictModal); });
+
+        // Cloud load runs inside AccountSync.login / signup (not on every page load).
+
+        // --- Login ---
+        document.getElementById('login-submit').addEventListener('click', async function() {
+            var errEl = document.getElementById('login-error');
+            hideError(errEl);
+            var username = document.getElementById('login-username').value.trim();
+            var password = document.getElementById('login-password').value;
+            if (!username || !password) { showError(errEl, 'Please enter your username and password.'); return; }
+            this.disabled = true;
+            try {
+                var result = await AccountSync.login(username, password);
+                if (result.success) {
+                    closeModal(authModal);
+                    updateHeaderUI(AccountSync.getUser());
+                    if (typeof GameCoins !== 'undefined') GameCoins.updateCoinDisplay();
+                } else {
+                    showError(errEl, result.error || 'Login failed.');
+                }
+            } catch(e) { showError(errEl, 'Connection error. Try again.'); }
+            this.disabled = false;
+        });
+
+        // --- Signup ---
+        document.getElementById('signup-submit').addEventListener('click', async function() {
+            var errEl = document.getElementById('signup-error');
+            hideError(errEl);
+            var username = document.getElementById('signup-username').value.trim();
+            var password = document.getElementById('signup-password').value;
+            var confirm = document.getElementById('signup-password-confirm').value;
+            var email = document.getElementById('signup-email').value.trim();
+            var terms = document.getElementById('signup-terms').checked;
+            if (!username || !password) { showError(errEl, 'Username and password are required.'); return; }
+            if (password.length < 8) { showError(errEl, 'Password must be at least 8 characters.'); return; }
+            if (password !== confirm) { showError(errEl, 'Passwords do not match.'); return; }
+            if (!terms) { showError(errEl, 'You must agree to the Terms & Conditions.'); return; }
+            this.disabled = true;
+            try {
+                var result = await AccountSync.signup(username, password, email || undefined);
+                if (result.success) {
+                    closeModal(authModal);
+                    updateHeaderUI(AccountSync.getUser());
+                    if (typeof GameCoins !== 'undefined') GameCoins.updateCoinDisplay();
+                } else {
+                    showError(errEl, result.error || 'Signup failed.');
+                }
+            } catch(e) { showError(errEl, 'Connection error. Try again.'); }
+            this.disabled = false;
+        });
+
+        // --- Forgot Password ---
+        document.getElementById('forgot-submit').addEventListener('click', async function() {
+            var errEl = document.getElementById('forgot-error');
+            var successEl = document.getElementById('forgot-success');
+            hideError(errEl); successEl.style.display = 'none';
+            var username = document.getElementById('forgot-username').value.trim();
+            if (!username) { showError(errEl, 'Please enter your username.'); return; }
+            this.disabled = true;
+            try {
+                var res = await fetch(API_BASE + '/api/auth/forgot-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ username: username })
+                });
+                var data = {};
+                try { data = await res.json(); } catch (_) {}
+                if (!res.ok || data.success === false) {
+                    showError(errEl, data.error || 'Could not send reset link. Try again later.');
+                } else if (data.hasEmail === false && data.message) {
+                    successEl.textContent = data.message;
+                    successEl.style.display = '';
+                } else {
+                    successEl.textContent = 'If that account has an email on file, a reset link has been sent.';
+                    successEl.style.display = '';
+                }
+            } catch(e) { showError(errEl, 'Connection error. Try again.'); }
+            this.disabled = false;
+        });
+
+        // --- Logout ---
+        logoutBtn.addEventListener('click', async function() {
+            await AccountSync.logout();
+            updateHeaderUI(null);
+            document.getElementById('profile-modal').style.display = 'none';
+        });
+
+        // --- Init: check session on load ---
+        AccountSync.checkSession().then(function(user) {
+            updateHeaderUI(user);
+        });
+    })();
+    </script>
+    <style>
+    #wheel-canvas.spinning { cursor:not-allowed; }
+    #wheel-canvas:active:not(.spinning) { cursor:grabbing; }
+    #wheel-spin-btn {
+        margin-top:12px;
+        padding:10px 28px;
+        font-size:1rem;
+        font-weight:700;
+        color:#1b2838;
+        background:linear-gradient(180deg,#FFD700 0%,#DAA520 100%);
+        border:2px solid #B8860B;
+        border-radius:8px;
+        cursor:pointer;
+        transition:filter 0.15s,opacity 0.15s;
+    }
+    #wheel-spin-btn:hover:not(:disabled) { filter:brightness(1.08); }
+    #wheel-spin-btn:disabled { opacity:0.45; cursor:not-allowed; }
+    #wheel-fix-btn {
+        display:none;
+        margin-top:10px;
+        padding:10px 22px;
+        font-size:0.95rem;
+        font-weight:700;
+        color:#fff;
+        background:linear-gradient(180deg,#FF7043 0%,#D84315 100%);
+        border:2px solid #BF360C;
+        border-radius:8px;
+        cursor:pointer;
+        transition:filter 0.15s,opacity 0.15s;
+    }
+    #wheel-fix-btn:hover:not(:disabled) { filter:brightness(1.08); }
+    #wheel-fix-btn:disabled { opacity:0.45; cursor:not-allowed; }
+    .wheel-btn-wrap {
+        display:flex;
+        flex-direction:column;
+        align-items:stretch;
+        gap:4px;
+        min-width:0;
+    }
+    #awesome-wheel-btn.wheel-effect-active {
+        animation:wheel-effect-pulse 1.4s ease-in-out infinite;
+        box-shadow:0 0 0 2px rgba(255, 183, 77, 0.85);
+    }
+    @keyframes wheel-effect-pulse {
+        0%, 100% { filter:brightness(1); }
+        50% { filter:brightness(1.18); }
+    }
+    .wheel-effect-indicator {
+        width:100%;
+        margin-top:4px;
+        padding:6px 8px;
+        border-radius:6px;
+        font-size:0.78rem;
+        font-weight:700;
+        line-height:1.25;
+        text-align:center;
+        color:#fff6e8;
+        background:linear-gradient(180deg,#ef6c00 0%,#d84315 100%);
+        border:1px solid #bf360c;
+        box-shadow:0 2px 8px rgba(0,0,0,0.18);
+    }
+    </style>
+    
+    <div id="panop-terminal-modal" class="modal">
+        <div class="modal-content panop-terminal-wrap" id="panop-terminal-content">
+            <div class="panop-terminal-layout">
+                
+                <div class="panop-monitor">
+                    <div class="panop-monitor-bar">
+                        <span class="panop-dot"></span><span class="panop-dot"></span><span class="panop-dot"></span>
+                        <span class="panop-monitor-title">BUGOS</span>
+                    </div>
+                    <div class="panop-monitor-screen">
+                        <div id="panop-terminal-body"></div>
+                        <div class="panop-monitor-footer">
+                            <button id="panop-terminal-launch" class="panop-launch-btn" disabled="">OPEN</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panop-sticky" id="panop-sticky">
+                    <div class="panop-sticky-pin"></div>
+                    <div class="panop-sticky-title">CODES:</div>
+                    <div id="panop-sticky-codes" class="panop-sticky-body"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="awesome-wheel-modal" class="modal">
+        <div class="modal-content" style="max-width:600px;max-height:95vh;text-align:center;overflow-x:hidden;">
+            <h2 style="margin:0 0 8px;color:var(--ink,#1b2838);">Wheel of Awesome 2.0</h2>
+            <canvas id="wheel-canvas" style="width:100%;max-width:500px;aspect-ratio:1 / 1;height:auto;max-height:min(68vh, 500px);display:block;margin:0 auto;cursor:grab;border-radius:8px;"></canvas>
+            <button type="button" id="wheel-spin-btn">Spin!</button>
+            <button type="button" id="wheel-fix-btn" style="display:none;">Use Wheel Fix</button>
+            <div id="wheel-status" style="margin-top:8px;font-size:0.95rem;color:#888;min-height:1.2em;"></div>
+            <div id="wheel-result" style="font-size:1.15rem;font-weight:700;color:#FFD700;min-height:1.4em;"></div>
+        </div>
+    </div>
+
+    
+<script type="module" src="../static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" data-cf-beacon="{&quot;version&quot;:&quot;2024.11.0&quot;,&quot;token&quot;:&quot;dee91f5c269943098e176a694a55449f&quot;,&quot;r&quot;:1,&quot;spa&quot;:2}"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a591b1b05d29d8c1',t:'MTc5NDQ0NjIxNQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a591b1b05d29d8c1',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+
+</body></html>

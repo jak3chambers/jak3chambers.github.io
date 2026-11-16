@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta http-equiv="refresh" content="0;url=index.html?lang=ca">
+<script>window.location.replace('index.html?lang=ca');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="bugs-box.css">
+<title>Capsa d'insectes</title>
+<style>
+  :root {
+    --page-background-image: url("../../images/thekip.png");
+    --page-background-overlay: rgba(123, 206, 239, 0.16);
+    --page-text-color: #111;
+    --border-color: #7bceef;
+    --panel-background: rgba(123, 206, 239, 0.55);
+    --bar-background: #ffad42;
+    --control-background: rgba(123, 206, 239, 0.72);
+    --page-padding: 8px;
+    --layout-gap: 8px;
+    --box-padding: 8px;
+    --ball-box-height: 60vh;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    gap: var(--layout-gap);
+    padding: var(--page-padding);
+    color: var(--page-text-color);
+    background: #313131 var(--page-background-image) center / cover fixed no-repeat;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: var(--page-background-overlay);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body > * { position: relative; z-index: 1; }
+
+  .box {
+    position: relative;
+    padding: var(--box-padding);
+    border: 1px dashed var(--border-color);
+    background: var(--panel-background);
+  }
+
+  header { display: flex; justify-content: flex-end; }
+  #page-selector { display: flex; gap: var(--layout-gap); background: #ffad42; }
+  #page-selector a, #page-selector span {
+    padding: 2px 10px;
+    border: 1px solid #237eae;
+    background: #42a5de;
+    color: #172635;
+    text-decoration: none;
+  }
+  #page-selector a:hover { background: #70bee9; }
+
+  #news-bar {
+    overflow: hidden;
+    border: 1px dashed var(--border-color);
+    background: var(--bar-background);
+    white-space: nowrap;
+  }
+  #news-bar .track { display: inline-block; padding: 4px 0; animation: roll 24s linear infinite; }
+  @keyframes roll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+  #ball-box { position: relative; min-height: var(--ball-box-height); margin-top: -4px; overflow: hidden; }
+  #ball-box .bugs-container { position: absolute; inset: 0; }
+
+  #box-controls { position: absolute; top: 8px; left: 8px; z-index: 4; width: calc(100% - 16px); }
+  #box-controls .button-tray {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    padding: 5px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  #box-controls .button-tray::-webkit-scrollbar { display: none; }
+  #box-controls .button-group {
+    display: flex;
+    flex: 0 0 max-content;
+    align-items: center;
+    gap: 8px;
+    width: max-content;
+    margin: 0 auto;
+    padding: 6px;
+    border: 1px solid #2a4560;
+    border-bottom-color: #1f3448;
+    border-radius: 8px;
+    background: #42a5de;
+    box-shadow: 0 2px 0 #142638;
+  }
+  #box-controls button {
+    flex: 0 0 auto;
+    padding: 8px 16px;
+    border: 1px solid #e9942f;
+    border-bottom-color: #c97a1c;
+    border-radius: 6px;
+    background: #ffad42;
+    box-shadow: 0 2px 0 #142638;
+    color: #202b34;
+    font: 0.9rem 'Comic Sans MS', 'Comic Sans', cursive;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  #box-controls button:hover:not(:disabled) { background: #ffc266; }
+  #box-controls button:disabled { opacity: 0.5; cursor: not-allowed; }
+  @media (max-width: 768px) { #box-controls .button-tray { padding-left: 64px; } }
+
+  #center-stack {
+    position: absolute;
+    top: 50%; left: 50%;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transform: translate(-50%, -50%);
+  }
+  #name-logo {
+    display: grid;
+    place-items: center;
+    width: min(56vw, 700px);
+    height: min(26vh, 200px);
+    max-width: calc(100vw - 48px);
+    border: 1px solid var(--border-color);
+    background: #42a5de;
+    overflow: hidden;
+    text-align: center;
+  }
+  #links-dropdown { width: min(56vw, 700px); max-width: calc(100vw - 48px); text-align: left; }
+  #links-dropdown summary { display: table; cursor: pointer; padding: 2px 10px; }
+  #links-dropdown ul { position: absolute; z-index: 4; min-width: 140px; background: var(--control-background); list-style: none; }
+  #links-dropdown a { display: block; padding: 4px 10px; color: inherit; }
+</style>
+</head>
+<body>
+  <header>
+    <nav id="page-selector" class="box" aria-label="Navegació">
+      <a href="index.html">inici</a>
+      <span aria-current="page">cat</span>
+    </nav>
+  </header>
+
+  <div id="news-bar" aria-label="Missatge en moviment">
+    <div class="track">Benvinguts a la capsa d'insectes · Benvinguts a la capsa d'insectes ·</div>
+  </div>
+
+  <main id="ball-box" class="box">
+    <div id="box-controls">
+      <div class="button-tray" role="toolbar" aria-label="Controls de simulació">
+        <div class="button-group">
+          <button id="toggle-freeze" type="button">Atura els insectes</button>
+          <button id="awesome-mode" type="button">Mode increïble</button>
+          <button id="destroy-button" type="button">Eliminar</button>
+          <button id="create-button" type="button">Afegir</button>
+          <button id="hat-button" type="button">Barrets activats</button>
+          <button id="drag-mode-button" type="button">Arrossegar activat</button>
+          <button id="info-mode-button" type="button">Informació activada</button>
+        </div>
+      </div>
+    </div>
+    <div class="bugs-container"></div>
+    <div id="center-stack">
+      <div id="name-logo">Capsa d'insectes</div>
+      <details id="links-dropdown">
+        <summary>Enllaços</summary>
+        <ul><li><a href="index.html">Inici</a></li></ul>
+      </details>
+    </div>
+  </main>
+
+<script>
+  window.SIMULATION_LABELS = {
+    freeze: 'Atura els insectes',
+    unfreeze: 'Reprèn els insectes',
+    awesome: 'Mode increïble',
+    boring: 'Mode normal',
+    death: 'Eliminar',
+    life: 'Afegir',
+    hatsOn: 'Barrets activats',
+    hatsOff: 'Barrets desactivats',
+    dragOn: 'Arrossegar activat',
+    dragOff: 'Arrossegar desactivat',
+    infoOn: 'Informació activada',
+    infoOff: 'Informació desactivada'
+  };
+</script>
+<script src="bugs-config.js"></script>
+<script src="bugs-box.js"></script>
+<script src="simulation-controls.js"></script>
+</body>
+</html>

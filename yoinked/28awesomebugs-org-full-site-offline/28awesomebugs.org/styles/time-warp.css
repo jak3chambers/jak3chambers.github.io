@@ -1,0 +1,214 @@
+
+
+
+
+
+#tw-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    pointer-events: none;
+    display: none;
+}
+#tw-overlay.tw-active {
+    display: block;
+}
+
+
+#tw-scanlines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0) 0px,
+        rgba(0, 0, 0, 0) 1px,
+        rgba(0, 0, 0, 0.08) 1px,
+        rgba(0, 0, 0, 0.08) 2px
+    );
+    pointer-events: none;
+    z-index: 1;
+    animation: tw-scanline-scroll 0.1s linear infinite;
+}
+
+@keyframes tw-scanline-scroll {
+    0%   { background-position: 0 0; }
+    100% { background-position: 0 4px; }
+}
+
+
+#tw-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        ellipse at center,
+        transparent 60%,
+        rgba(0, 0, 0, 0.35) 100%
+    );
+    pointer-events: none;
+    z-index: 2;
+}
+
+
+#tw-status-icon {
+    position: fixed;
+    top: calc(var(--ticker-offset, 0px) + 88px);
+    left: 24px;
+    font-size: 3rem;
+    color: #fff;
+    text-shadow:
+        0 0 6px rgba(255,255,255,0.9),
+        0 0 20px rgba(100,200,255,0.5),
+        2px 2px 0 rgba(0,0,0,0.6);
+    z-index: 10001;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    pointer-events: none;
+}
+#tw-status-icon.tw-icon-show {
+    opacity: 1;
+    animation: tw-icon-flicker 2s step-end infinite;
+}
+
+@keyframes tw-icon-flicker {
+    0%, 100% { opacity: 1; }
+    4%       { opacity: 0.6; }
+    8%       { opacity: 1; }
+    45%      { opacity: 1; }
+    47%      { opacity: 0.5; }
+    49%      { opacity: 1; }
+}
+
+
+#tw-channel-label {
+    position: fixed;
+    top: calc(var(--ticker-offset, 0px) + 88px);
+    right: 24px;
+    font-family: 'Courier New', monospace;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #00ff41;
+    text-shadow:
+        0 0 8px rgba(0, 255, 65, 0.7),
+        0 0 20px rgba(0, 255, 65, 0.3),
+        2px 2px 0 rgba(0, 0, 0, 0.7);
+    z-index: 10001;
+    opacity: 0;
+    transition: opacity 0.5s;
+    letter-spacing: 3px;
+    pointer-events: none;
+}
+#tw-channel-label.tw-channel-show {
+    opacity: 1;
+}
+
+
+#tw-volume-label {
+    position: fixed;
+    bottom: 32px;
+    right: 24px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.8rem;
+    color: #fff;
+    text-shadow:
+        0 0 6px rgba(255,255,255,0.9),
+        0 0 16px rgba(100,200,255,0.4),
+        2px 2px 0 rgba(0,0,0,0.6);
+    z-index: 10001;
+    opacity: 0;
+    transition: opacity 0.3s;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    pointer-events: none;
+}
+#tw-volume-label.tw-vol-show {
+    opacity: 1;
+}
+
+
+#tw-static-noise {
+    position: absolute;
+    inset: 0;
+    z-index: 8;
+    opacity: 0;
+    pointer-events: none;
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    mix-blend-mode: overlay;
+}
+#tw-static-noise.tw-static-burst {
+    opacity: 0.7;
+    animation: tw-noise-jitter 0.1s steps(3) infinite;
+}
+
+@keyframes tw-noise-jitter {
+    0%   { background-position: 0 0; }
+    33%  { background-position: -50px -30px; }
+    66%  { background-position: 30px -60px; }
+    100% { background-position: -20px 40px; }
+}
+
+
+
+
+
+
+#tw-overlay.tw-mode-fastforward {
+    animation: tw-ff-jitter 0.08s steps(2) infinite;
+}
+#tw-overlay.tw-mode-fastforward #tw-vignette {
+    background: radial-gradient(ellipse at center, rgba(255,100,0,0.03) 40%, rgba(0,0,0,0.35) 100%);
+}
+
+
+#tw-overlay.tw-mode-fastforward2 {
+    animation: tw-ff-jitter 0.04s steps(2) infinite;
+}
+#tw-overlay.tw-mode-fastforward2 #tw-vignette {
+    background: radial-gradient(ellipse at center, rgba(255,80,0,0.08) 40%, rgba(0,0,0,0.35) 100%);
+}
+
+@keyframes tw-ff-jitter {
+    0%   { transform: translateX(0); }
+    50%  { transform: translateX(1px); }
+    100% { transform: translateX(-1px); }
+}
+
+
+#tw-overlay.tw-mode-slowdown #tw-vignette {
+    background: radial-gradient(ellipse at center, rgba(50,100,255,0.06) 40%, rgba(0,0,0,0.4) 100%);
+}
+#tw-overlay.tw-mode-slowdown #tw-scanlines {
+    animation-duration: 0.5s;
+}
+
+
+#tw-overlay.tw-mode-slowdown2 #tw-vignette {
+    background: radial-gradient(ellipse at center, rgba(30,60,255,0.12) 40%, rgba(0,0,0,0.45) 100%);
+}
+#tw-overlay.tw-mode-slowdown2 #tw-scanlines {
+    animation-duration: 2s;
+}
+
+
+
+
+.bugs-container:has(~ #tw-overlay.tw-active),
+body:has(#tw-overlay.tw-active) .bugs-container {
+    animation: tw-body-flicker 4s step-end infinite;
+}
+
+@keyframes tw-body-flicker {
+    0%, 100% { opacity: 1; }
+    7%       { opacity: 0.97; }
+    10%      { opacity: 1; }
+    42%      { opacity: 0.98; }
+    44%      { opacity: 1; }
+    63%      { opacity: 0.96; }
+    65%      { opacity: 1; }
+    92%      { opacity: 0.98; }
+    94%      { opacity: 1; }
+}

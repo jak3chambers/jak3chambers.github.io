@@ -1,0 +1,245 @@
+
+
+
+.horseman-ghost {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+  z-index: 999999;
+  transform: translate(-50%, -50%);
+  animation: ghost-rise 1.2s ease-out forwards;
+}
+
+@keyframes ghost-rise {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -60%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -250%) scale(0.6);
+  }
+}
+
+
+
+.war-proj {
+  position: absolute;
+  pointer-events: none;
+}
+
+.war-proj-bullet {
+  width: 22px;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(255,160,0,0), #ff8c00 20%, #ffa500 50%, #ffd700 80%, #ffec80);
+  border-radius: 2px;
+  box-shadow: 0 0 6px 2px rgba(255,165,0,0.8), 0 0 14px 4px rgba(255,200,0,0.35);
+}
+
+
+.war-proj-bullet[data-weapon="gun"] {
+  width: 12px;
+  height: 2px;
+  box-shadow: 0 0 4px 1px rgba(255,165,0,0.6), 0 0 8px 2px rgba(255,200,0,0.25);
+}
+
+.war-proj-rocket {
+  width: 20px;
+  height: 7px;
+  background: linear-gradient(90deg, #2a2a2a 10%, #444 30%, #555 50%, #444 70%, #333 90%);
+  border-radius: 2px 4px 4px 2px;
+  border-top: 1px solid #666;
+  border-bottom: 1px solid #222;
+  box-shadow: 0 0 6px 2px rgba(255,100,0,0.4);
+  position: relative;
+}
+.war-proj-rocket::before {
+  content: '';
+  position: absolute;
+  right: -3px;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  background: linear-gradient(90deg, #555, #3a3a3a);
+  border-radius: 0 3px 3px 0;
+}
+.war-proj-rocket::after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 1px;
+  width: 4px;
+  height: 5px;
+  background: #666;
+  border-radius: 2px 0 0 2px;
+}
+
+
+.war-proj-grenade {
+  width: 14px;
+  height: 10px;
+  border-radius: 5px 5px 3px 3px;
+  border: 1px solid #222;
+  box-shadow: 0 0 4px 1px rgba(0,0,0,0.5);
+  transform: translate(-50%, -50%);
+  animation: war-grenade-tumble 0.3s linear infinite;
+}
+.war-proj-grenade[data-team="red"] {
+  background: linear-gradient(180deg, #cc2222 0%, #cc2222 40%, #333 40%, #333 100%);
+}
+.war-proj-grenade[data-team="blu"] {
+  background: linear-gradient(180deg, #2266cc 0%, #2266cc 40%, #333 40%, #333 100%);
+}
+
+@keyframes war-grenade-tumble {
+  0%   { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+
+.war-trail-rocket {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,200,200,0.6), rgba(100,100,100,0.2));
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: war-trail-fade 0.3s ease-out forwards;
+}
+
+
+.war-trail-grenade {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(150,150,150,0.4), rgba(80,80,80,0.1));
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: war-trail-fade 0.25s ease-out forwards;
+}
+
+@keyframes war-trail-fade {
+  0%   { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%,-50%) scale(2.5); }
+}
+
+.war-explosion {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 5%, rgba(255,220,0,0.95) 15%, rgba(255,120,0,0.8) 35%, rgba(255,40,0,0.5) 55%, rgba(180,0,0,0.2) 75%, transparent 100%);
+  pointer-events: none;
+  animation: war-explode 0.55s ease-out forwards;
+}
+
+@keyframes war-explode {
+  0%   { opacity: 1; transform: translate(-50%,-50%) scale(0.1); }
+  15%  { opacity: 1; transform: translate(-50%,-50%) scale(1.2); }
+  40%  { opacity: 0.9; transform: translate(-50%,-50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%,-50%) scale(1.5); }
+}
+
+.war-weapon {
+  image-rendering: pixelated;
+}
+
+
+.war-dmg-number {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  font-family: 'TF2 Build', 'Impact', 'Arial Black', sans-serif;
+  font-size: 18px;
+  font-weight: 900;
+  color: #ffe04a;
+  text-shadow:
+    -1px -1px 0 #000,
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000,
+     0 0 6px rgba(255,100,0,0.5);
+  pointer-events: none;
+  z-index: 60;
+  white-space: nowrap;
+  transition: opacity 0.1s;
+}
+.war-dmg-fade {
+  animation: war-dmg-fadeout 0.6s ease-out forwards;
+}
+@keyframes war-dmg-fadeout {
+  0%   { opacity: 1; transform: translate(-50%, -100%) translateY(0); }
+  100% { opacity: 0; transform: translate(-50%, -100%) translateY(-20px); }
+}
+
+
+
+.famine-bite-particle {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #c44 60%, #822);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: famine-bite-fly 0.45s ease-out forwards;
+}
+
+@keyframes famine-bite-fly {
+  0%   { opacity: 1; transform: translate(-50%, -50%) translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) scale(0.3); }
+}
+
+.famine-pop-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, #e88 40%, #a44 70%, #633);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: famine-pop-fly 0.65s ease-out forwards;
+}
+
+@keyframes famine-pop-fly {
+  0%   { opacity: 1; transform: translate(-50%, -50%) translate(0, 0) scale(1); }
+  50%  { opacity: 0.8; }
+  100% { opacity: 0; transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) scale(0.2); }
+}
+
+
+
+.pest-locust {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  pointer-events: none;
+  image-rendering: pixelated;
+  z-index: 55;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+  animation: pest-locust-flutter 0.15s ease-in-out infinite alternate;
+}
+
+@keyframes pest-locust-flutter {
+  0%   { margin-top: -1px; }
+  100% { margin-top: 1px; }
+}
+
+.pest-bite-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #8b6 60%, #574);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: pest-bite-fly 0.35s ease-out forwards;
+}
+
+@keyframes pest-bite-fly {
+  0%   { opacity: 1; transform: translate(-50%, -50%) translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) scale(0.2); }
+}

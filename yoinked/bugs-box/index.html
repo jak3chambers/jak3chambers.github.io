@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+(function () {
+  var requestedLanguage = new URLSearchParams(window.location.search).get('lang');
+  var savedLanguage = null;
+  try { savedLanguage = localStorage.getItem('chambersCatLanguage'); } catch (_) {}
+  var deviceLanguages = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
+  var deviceUsesCatalan = deviceLanguages.some(function (language) { return /^ca(?:-|$)/i.test(language); });
+  var language = requestedLanguage === 'ca' || requestedLanguage === 'en'
+    ? requestedLanguage
+    : savedLanguage === 'ca' || savedLanguage === 'en'
+      ? savedLanguage
+      : deviceUsesCatalan ? 'ca' : 'en';
+  window.SITE_LANGUAGE = language;
+  document.documentElement.lang = language;
+  if (requestedLanguage === 'ca' || requestedLanguage === 'en') {
+    try { localStorage.setItem('chambersCatLanguage', requestedLanguage); } catch (_) {}
+  }
+})();
+</script>
+<link rel="stylesheet" href="bugs-box.css">
+<title>schematic</title>
+<style>
+
+  /*
+   * QUICK DESIGN SETTINGS
+   * Change these values to customize the page's colors, transparency, and sizing.
+   * For no background image, use: --page-background-image: none;
+   */
+  :root {
+    --page-background-image: none;
+    --page-background-position: center;
+    --page-background-size: cover;
+    --page-background-overlay: transparent;
+    --page-text-color: #111;
+    --border-color: #ea8533;
+    --border-style: dashed;
+    --panel-background: rgba(234, 133, 51, 0.55);
+    --bar-background: #ea8533;
+    --control-background: rgba(234, 133, 51, 0.72);
+    --page-padding: 8px;
+    --layout-gap: 8px;
+    --box-padding: 8px;
+    --ball-box-height: 60vh;
+    --logo-box-width: min(56vw, 700px);
+    --logo-box-height: min(26vh, 200px);
+    --center-stack-gap: 8px;
+    --ticker-speed: 20s;
+    --ball-color: #888;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    gap: var(--layout-gap);
+    padding: var(--page-padding);
+    color: var(--page-text-color);
+    background-color: #ed2323;
+    background-image: var(--page-background-image);
+    background-position: var(--page-background-position);
+    background-size: var(--page-background-size);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: var(--page-background-overlay);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body > * { position: relative; z-index: 1; }
+
+  .box {
+    border: 1px var(--border-style) var(--border-color);
+    padding: var(--box-padding);
+    position: relative;
+    background: var(--panel-background);
+  }
+  .box::before {
+    content: attr(data-label);
+    position: absolute;
+    top: -1px; left: -1px;
+    font: 10px monospace;
+    background: var(--control-background);
+    border: 1px var(--border-style) var(--border-color);
+    padding: 1px 4px;
+  }
+
+  /* top row: page selector */
+  header { display: flex; justify-content: flex-end; }
+  #page-selector { display: flex; flex-wrap: wrap; gap: var(--layout-gap); background: #ea8533; }
+  #page-selector::before { display: none; }
+  #page-selector a, #page-selector span {
+    border: 1px solid #ea8533;
+    padding: 2px 10px;
+    color: #000000;
+    background: #fbe6e5;
+  }
+  #page-selector a:hover { background: #f99d52; }
+  #page-selector span[aria-current] { background: #ed2323; color: #fbe6e5; font-weight: 700; }
+
+  /* rolling news bar: top, full width, no length limit */
+  #news-bar {
+    overflow: hidden;
+    white-space: nowrap;
+    border: 1px var(--border-style) var(--border-color);
+    background: var(--bar-background);
+  }
+  #news-bar .track { display: inline-block; padding: 4px 0; animation: roll var(--ticker-speed) linear infinite; }
+  @keyframes roll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+  #box-controls {
+    position: absolute;
+    top: var(--box-padding);
+    left: var(--box-padding);
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    width: calc(100% - 2 * var(--box-padding));
+  }
+  #box-controls .button-tray {
+    display: flex;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 5px;
+    min-width: 0;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  #box-controls .button-tray::-webkit-scrollbar { display: none; }
+  @media (max-width: 768px) {
+    #box-controls .button-tray { padding-left: 64px; }
+  }
+  @media (max-width: 520px) { header { padding-left: 76px; } }
+  #box-controls .button-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto;
+    flex: 0 0 max-content;
+    width: max-content;
+    padding: 6px;
+    background: #ea8533;
+    border: 1px solid #ea8533;
+    border-bottom-color: #120b16;
+    border-radius: 8px;
+    box-shadow: 0 2px 0 #120b16;
+  }
+  #box-controls .button-tray button {
+    flex: 0 0 auto;
+    padding: 8px 16px;
+    color: #fbe6e5;
+    font-size: 0.9rem;
+    font-family: 'Comic Sans Fallback', 'Comic Sans MS', 'Comic Sans', cursive;
+    background: #ed2323;
+    border: 1px solid #b81a1a;
+    border-bottom-color: #8f1212;
+    border-radius: 6px;
+    box-shadow: 0 2px 0 #120b16;
+    transition: background-color 0.2s, border-color 0.2s, transform 0.05s;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  #box-controls .button-tray button:hover:not(:disabled) {
+    background: #f55050;
+    border-color: #ed2323;
+  }
+  #box-controls .button-tray button:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 #120b16;
+  }
+  #box-controls .button-tray button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Lock button links to the other page. */
+  #lock-btn {
+    position: absolute;
+    top: var(--box-padding);
+    left: var(--box-padding);
+    z-index: 5;
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border: 0;
+    padding: 4px;
+    text-decoration: none;
+    color: inherit;
+    background: transparent;
+  }
+  #lock-btn img { width: 40px; height: 40px; object-fit: contain; }
+
+  #keypad-dialog {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 16px;
+    border: 0;
+    background: transparent;
+    place-items: center;
+  }
+  #keypad-dialog[open] { display: grid; }
+  #keypad-dialog::backdrop { background: rgba(40, 29, 45, 0.72); backdrop-filter: blur(2px); }
+  #keypad-form {
+    position: relative;
+    width: min(100%, 340px);
+    padding: 16px 16px 42px;
+    border: 1px solid rgba(234, 133, 51, 0.75);
+    border-radius: 8px;
+    background: #281d2d;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  }
+  #keypad-entry {
+    display: block;
+    width: 100%;
+    height: 58px;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border: 1px solid rgba(234, 133, 51, 0.6);
+    border-radius: 6px;
+    background: #120b16;
+    color: #fbe6e5;
+    font: 24px/1.2 monospace;
+    text-align: right;
+    outline: none;
+  }
+  #keypad-entry:focus-visible { border-color: #fbe6e5; box-shadow: 0 0 0 2px rgba(249, 157, 82, 0.5); }
+  #keypad-keys { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  #keypad-keys button {
+    min-width: 0;
+    height: 60px;
+    border: 1px solid #c46f24;
+    border-bottom-color: #9b5a1c;
+    border-radius: 6px;
+    background: #ea8533;
+    box-shadow: 0 2px 0 #120b16;
+    color: #000000;
+    font: 700 24px/1 monospace;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  #keypad-keys button:hover { background: #f99d52; }
+  #keypad-keys button:active { transform: translateY(1px); box-shadow: 0 1px 0 #120b16; }
+  #keypad-keys button:focus-visible { outline: 3px solid #fbe6e5; outline-offset: 2px; }
+  #keypad-keys [data-digit="0"] { grid-column: 2; }
+  #keypad-enter { grid-column: 3; font: 700 15px/1 sans-serif !important; }
+  #keypad-screws {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+  .keypad-screw {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: 1px solid #7c6684;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 28%, #f5f7f8 0, #bdc5cc 42%, #7e8a94 76%, #56616a 100%);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.75), 0 1px 2px rgba(0, 0, 0, 0.55);
+    cursor: pointer;
+    pointer-events: auto;
+    transition: transform 450ms cubic-bezier(0.2, 0.8, 0.25, 1), opacity 350ms ease;
+  }
+  .keypad-screw::before,
+  .keypad-screw::after {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 4px;
+    width: 10px;
+    height: 2px;
+    border-radius: 2px;
+    background: #5a4660;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+  }
+  .keypad-screw::after { transform: rotate(90deg); }
+  .keypad-screw[data-side="left"].removed { transform: translate(-24px, 22px) rotate(210deg); }
+  .keypad-screw[data-side="right"].removed { transform: translate(24px, 22px) rotate(-210deg); }
+  .keypad-screw.removed { opacity: 0; pointer-events: none; }
+  .keypad-screw:focus-visible { outline: 3px solid #fbe6e5; outline-offset: 3px; }
+  #letter-keyboard {
+    max-height: 0;
+    margin-top: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: top center;
+    pointer-events: none;
+    transition: max-height 500ms ease, margin-top 500ms ease, opacity 250ms ease, transform 500ms ease;
+  }
+  #keypad-form.keyboard-unlocked #letter-keyboard {
+    max-height: 240px;
+    margin-top: 12px;
+    opacity: 1;
+    transform: scaleY(1);
+    pointer-events: auto;
+  }
+  .letter-row { display: flex; justify-content: center; gap: 4px; margin-top: 4px; }
+  .letter-row button {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 36px;
+    padding: 0 3px;
+    border: 1px solid #ea8533;
+    border-bottom-color: #9b5a1c;
+    border-radius: 5px;
+    background: #fbe6e5;
+    box-shadow: 0 2px 0 #120b16;
+    color: #000000;
+    font: 700 13px/1 monospace;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .letter-row button:hover { background: #f99d52; }
+  .letter-row button:active { transform: translateY(1px); box-shadow: 0 1px 0 #120b16; }
+  .letter-row button:focus-visible { outline: 2px solid #ea8533; outline-offset: 1px; }
+  .letter-row button[data-action] { flex: 1.5 1 0; background: #ea8533; border-color: #c46f24; border-bottom-color: #9b5a1c; }
+  .letter-row .space-key { flex: 5 1 0; }
+  #keypad-keys button.physical-pressed,
+  .letter-row button.physical-pressed {
+    transform: translateY(2px);
+    filter: brightness(0.88);
+    box-shadow: 0 1px 0 #120b16;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .keypad-screw, #letter-keyboard { transition: none; }
+  }
+
+  /* middle: ball box incasing the name/logo box */
+  #ball-box { background: #452a54; border-color: #ea8533; position: relative; overflow: hidden; min-height: var(--ball-box-height); margin-top: -4px; }
+  #ball-box .bugs-container { position: absolute; inset: 0; }
+
+  /* center stack: name/logo box with links dropdown right under it */
+  #center-stack {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--center-stack-gap);
+    z-index: 2;
+  }
+  #name-logo {
+    width: var(--logo-box-width);
+    height: var(--logo-box-height);
+    max-width: calc(100vw - 48px);
+    border: 1px solid var(--border-color);
+    display: grid; place-items: center;
+    overflow: hidden;
+    text-align: center;
+    background: #fbe6e5; /* balls bounce off this box */
+  }
+  #name-logo img { width: 100%; height: 100%; object-fit: contain; }
+
+  /* links dropdown: right under the name/logo box */
+  #links-dropdown { position: relative; display: inline-block; width: var(--logo-box-width); max-width: calc(100vw - 48px); text-align: left; }
+  #links-dropdown summary {
+    display: table;
+    cursor: pointer;
+    padding: 2px 10px;
+    list-style: none;
+    background: transparent;
+    transform-origin: left center;
+    transition: transform 150ms ease, text-shadow 150ms ease;
+  }
+  #links-dropdown summary:hover {
+    transform: scale(1.08);
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
+  }
+  #links-dropdown ul { position: absolute; left: 0; z-index: 4; border: 1px solid var(--border-color); background: var(--control-background); list-style: none; min-width: 140px; }
+  #links-dropdown li a { display: block; padding: 4px 10px; color: inherit; }
+  #links-dropdown li a:hover { background: var(--panel-background); }
+  @media (prefers-reduced-motion: reduce) {
+    #news-bar .track { animation-duration: 0.001ms; }
+    #links-dropdown summary { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+
+  <!-- Page navigation: edit the PAGES list in nav.js to change these items. -->
+  <header>
+    <nav id="page-selector" class="box">
+    </nav>
+  </header>
+
+  <!-- Scrolling message: change SITE_CONFIG.newsText below. -->
+  <div id="news-bar" data-label="rolling text" aria-label="Scrolling announcement">
+    <div class="track"></div>
+  </div>
+
+  <!-- Main animation area and center logo/text: edit SITE_CONFIG below. -->
+  <main id="ball-box" class="box">
+    <div id="box-controls">
+      <div class="button-tray" role="toolbar" aria-label="Simulation controls">
+        <div class="button-group primary" aria-label="Simulation controls">
+          <button id="toggle-freeze" type="button">Freeze Bugs</button>
+          <button id="awesome-mode" type="button">Awesome Mode</button>
+          <button id="destroy-button" type="button">Death</button>
+          <button id="create-button" type="button">Life</button>
+          <button id="hat-button" type="button">Hats On</button>
+          <button id="drag-mode-button" type="button">Drag Mode On</button>
+          <button id="info-mode-button" type="button">Info On</button>
+        </div>
+      </div>
+    </div>
+    <a id="lock-btn" href="corner.html" aria-label="Open keypad" title="Open keypad"><img src="src/lock.png" alt=""></a>
+    <div class="bugs-container"></div>
+    <div id="center-stack">
+      <div id="name-logo"></div>
+      <details id="links-dropdown">
+        <summary></summary>
+        <ul></ul>
+      </details>
+    </div>
+  </main>
+
+  <dialog id="keypad-dialog" aria-label="Keypad">
+    <form id="keypad-form">
+      <input id="keypad-entry" type="text" aria-label="Entry" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <div id="keypad-keys" role="group" aria-label="Number keys">
+        <button type="button" data-digit="1">1</button>
+        <button type="button" data-digit="2">2</button>
+        <button type="button" data-digit="3">3</button>
+        <button type="button" data-digit="4">4</button>
+        <button type="button" data-digit="5">5</button>
+        <button type="button" data-digit="6">6</button>
+        <button type="button" data-digit="7">7</button>
+        <button type="button" data-digit="8">8</button>
+        <button type="button" data-digit="9">9</button>
+        <button type="button" data-digit="0">0</button>
+        <button id="keypad-enter" type="submit">Enter</button>
+      </div>
+      <div id="letter-keyboard" aria-hidden="true" inert>
+        <div class="letter-row">
+          <button type="button" data-letter="q">q</button><button type="button" data-letter="w">w</button><button type="button" data-letter="e">e</button><button type="button" data-letter="r">r</button><button type="button" data-letter="t">t</button><button type="button" data-letter="y">y</button><button type="button" data-letter="u">u</button><button type="button" data-letter="i">i</button><button type="button" data-letter="o">o</button><button type="button" data-letter="p">p</button>
+        </div>
+        <div class="letter-row">
+          <button type="button" data-letter="a">a</button><button type="button" data-letter="s">s</button><button type="button" data-letter="d">d</button><button type="button" data-letter="f">f</button><button type="button" data-letter="g">g</button><button type="button" data-letter="h">h</button><button type="button" data-letter="j">j</button><button type="button" data-letter="k">k</button><button type="button" data-letter="l">l</button>
+        </div>
+        <div class="letter-row">
+          <button type="button" data-action="shift" aria-label="Shift">Shift</button><button type="button" data-letter="z">z</button><button type="button" data-letter="x">x</button><button type="button" data-letter="c">c</button><button type="button" data-letter="v">v</button><button type="button" data-letter="b">b</button><button type="button" data-letter="n">n</button><button type="button" data-letter="m">m</button><button type="button" data-action="backspace" aria-label="Backspace">&#x232b;</button>
+        </div>
+        <div class="letter-row">
+          <button type="button" data-action="space" class="space-key" aria-label="Space">Space</button>
+        </div>
+      </div>
+      <div id="keypad-screws" role="group" aria-label="Keypad screws">
+        <button type="button" class="keypad-screw" data-side="left" aria-label="Remove left screw"></button>
+        <button type="button" class="keypad-screw" data-side="right" aria-label="Remove right screw"></button>
+      </div>
+    </form>
+  </dialog>
+
+<script src="nav.js"></script>
+<script>
+/*
+ * QUICK CONTENT SETTINGS
+ * Edit the values here to change the page's title, words, images, and links.
+ * Image paths are relative to this HTML file. Leave logoImage empty for text.
+ */
+const IS_CATALAN = window.SITE_LANGUAGE === 'ca';
+const SITE_CONFIG = IS_CATALAN ? {
+  pageTitle: "Capsa d'insectes",
+  newsText: "Benvinguts a la capsa d'insectes. Cada insecte té la seva pròpia història. Descobreix-les i juga una estona. · ",
+  cornerLink: { href: "corner.html", accessibleName: "Obre el teclat" },
+  logoText: "Capsa d'insectes",
+  logoImage: "",
+  logoImageAlt: "",
+  linksLabel: "> Enllaços",
+  links: [
+    { text: "exemple 1", href: "https://example.com" },
+    { text: "exemple 2", href: "https://example.com" },
+    { text: "exemple 3", href: "https://example.com" },
+    { text: "exemple 4", href: "https://example.com" },
+  ],
+  pageSelectorLabel: "Navegació",
+  tickerLabel: "Missatge en moviment",
+  keypadLabel: "Teclat",
+  entryLabel: "Entrada",
+  numberKeysLabel: "Tecles numèriques",
+  enterLabel: "Entra",
+  leftScrewLabel: "Treu el cargol esquerre",
+  rightScrewLabel: "Treu el cargol dret",
+  screwsLabel: "Cargols del teclat",
+  shiftLabel: "Maj",
+  shiftAriaLabel: "Majúscules",
+  backspaceLabel: "Esborra",
+  spaceLabel: "Espai",
+  simulationLabels: {
+    freeze: "Atura els insectes", unfreeze: "Reprèn els insectes",
+    awesome: "Mode increïble", boring: "Mode normal",
+    death: "Eliminar", life: "Afegir",
+    hatsOn: "Barrets activats", hatsOff: "Barrets desactivats",
+    dragOn: "Arrossegar activat", dragOff: "Arrossegar desactivat",
+    infoOn: "Informació activada", infoOff: "Informació desactivada"
+  }
+} : {
+  pageTitle: "schematic",
+  newsText: "example text • example text • example text • example text • example text •",
+  cornerLink: { href: "corner.html", accessibleName: "Open keypad" },
+  logoText: "name / logo image",
+  logoImage: "",
+  logoImageAlt: "",
+  linksLabel: "> links",
+  links: [
+    { text: "example 1", href: "https://example.com" },
+    { text: "example 2", href: "https://example.com" },
+    { text: "example 3", href: "https://example.com" },
+    { text: "example 4", href: "https://example.com" },
+  ],
+  pageSelectorLabel: "Page navigation",
+  tickerLabel: "Scrolling announcement",
+  keypadLabel: "Keypad",
+  entryLabel: "Entry",
+  numberKeysLabel: "Number keys",
+  enterLabel: "Enter",
+  leftScrewLabel: "Remove left screw",
+  rightScrewLabel: "Remove right screw",
+  screwsLabel: "Keypad screws",
+  shiftLabel: "Shift",
+  shiftAriaLabel: "Shift",
+  backspaceLabel: "Backspace",
+  spaceLabel: "Space",
+  simulationLabels: {
+    freeze: "Freeze Bugs", unfreeze: "Unfreeze Bugs",
+    awesome: "Awesome Mode", boring: "Boring Mode",
+    death: "Death", life: "Life",
+    hatsOn: "Hats On", hatsOff: "Hats Off",
+    dragOn: "Drag Mode On", dragOff: "Drag Mode Off",
+    infoOn: "Info On", infoOff: "Info Off"
+  }
+};
+window.SIMULATION_LABELS = SITE_CONFIG.simulationLabels;
+
+document.title = SITE_CONFIG.pageTitle;
+const pageSelector = document.getElementById('page-selector');
+window.SITE_NAV.build(pageSelector, 'home', window.SITE_LANGUAGE);
+
+document.querySelector('#news-bar .track').textContent = SITE_CONFIG.newsText;
+document.getElementById('news-bar').setAttribute('aria-label', SITE_CONFIG.tickerLabel);
+
+for (const [id, key] of Object.entries({
+  'toggle-freeze': 'freeze',
+  'awesome-mode': 'awesome',
+  'destroy-button': 'death',
+  'create-button': 'life',
+  'hat-button': 'hatsOn',
+  'drag-mode-button': 'dragOn',
+  'info-mode-button': 'infoOn'
+})) document.getElementById(id).textContent = SITE_CONFIG.simulationLabels[key];
+
+const cornerLink = document.getElementById('lock-btn');
+cornerLink.href = SITE_CONFIG.cornerLink.href;
+cornerLink.setAttribute('aria-label', SITE_CONFIG.cornerLink.accessibleName);
+cornerLink.title = SITE_CONFIG.cornerLink.accessibleName;
+
+const nameLogo = document.getElementById('name-logo');
+if (SITE_CONFIG.logoImage) {
+  const image = document.createElement('img');
+  image.src = SITE_CONFIG.logoImage;
+  image.alt = SITE_CONFIG.logoImageAlt || SITE_CONFIG.logoText;
+  nameLogo.append(image);
+} else {
+  nameLogo.textContent = SITE_CONFIG.logoText;
+}
+
+const linksDropdown = document.getElementById('links-dropdown');
+linksDropdown.querySelector('summary').textContent = SITE_CONFIG.linksLabel;
+const linksList = linksDropdown.querySelector('ul');
+for (const item of SITE_CONFIG.links) {
+  const listItem = document.createElement('li');
+  const link = document.createElement('a');
+  link.textContent = item.text;
+  link.href = item.href;
+  listItem.append(link);
+  linksList.append(listItem);
+}
+
+const keypadDialog = document.getElementById('keypad-dialog');
+const keypadForm = document.getElementById('keypad-form');
+const keypadEntry = document.getElementById('keypad-entry');
+const letterKeyboard = document.getElementById('letter-keyboard');
+keypadDialog.setAttribute('aria-label', SITE_CONFIG.keypadLabel);
+keypadEntry.setAttribute('aria-label', SITE_CONFIG.entryLabel);
+document.getElementById('keypad-keys').setAttribute('aria-label', SITE_CONFIG.numberKeysLabel);
+document.getElementById('keypad-enter').textContent = SITE_CONFIG.enterLabel;
+document.querySelector('.keypad-screw[data-side="left"]').setAttribute('aria-label', SITE_CONFIG.leftScrewLabel);
+document.querySelector('.keypad-screw[data-side="right"]').setAttribute('aria-label', SITE_CONFIG.rightScrewLabel);
+document.getElementById('keypad-screws').setAttribute('aria-label', SITE_CONFIG.screwsLabel);
+letterKeyboard.querySelector('[data-action="shift"]').textContent = SITE_CONFIG.shiftLabel;
+letterKeyboard.querySelector('[data-action="shift"]').setAttribute('aria-label', SITE_CONFIG.shiftAriaLabel);
+letterKeyboard.querySelector('[data-action="backspace"]').setAttribute('aria-label', SITE_CONFIG.backspaceLabel);
+letterKeyboard.querySelector('[data-action="space"]').textContent = SITE_CONFIG.spaceLabel;
+letterKeyboard.querySelector('[data-action="space"]').setAttribute('aria-label', SITE_CONFIG.spaceLabel);
+cornerLink.addEventListener('click', (event) => {
+  event.preventDefault();
+  keypadDialog.showModal();
+  keypadEntry.focus();
+});
+function insertKeypadText(text) {
+  const start = keypadEntry.selectionStart ?? keypadEntry.value.length;
+  const end = keypadEntry.selectionEnd ?? keypadEntry.value.length;
+  keypadEntry.setRangeText(text, start, end, 'end');
+  keypadEntry.focus();
+}
+function showPhysicalKeyPress(button) {
+  if (!button) return;
+  clearTimeout(button._physicalPressTimer);
+  button.classList.remove('physical-pressed');
+  void button.offsetWidth;
+  button.classList.add('physical-pressed');
+  button._physicalPressTimer = setTimeout(() => button.classList.remove('physical-pressed'), 140);
+}
+keypadEntry.addEventListener('keydown', (event) => {
+  let button = null;
+  if (/^[0-9]$/.test(event.key)) {
+    button = document.querySelector('#keypad-keys [data-digit="' + event.key + '"]');
+  } else if (/^[a-z]$/i.test(event.key) && !letterKeyboard.hasAttribute('inert')) {
+    button = letterKeyboard.querySelector('[data-letter="' + event.key.toLowerCase() + '"]');
+  } else if (!letterKeyboard.hasAttribute('inert')) {
+    if (event.key === ' ') button = letterKeyboard.querySelector('[data-action="space"]');
+    else if (event.key === 'Backspace') button = letterKeyboard.querySelector('[data-action="backspace"]');
+    else if (event.key === 'Shift') button = letterKeyboard.querySelector('[data-action="shift"]');
+  }
+  if (event.key === 'Enter') button = document.getElementById('keypad-enter');
+  showPhysicalKeyPress(button);
+});
+document.querySelectorAll('#keypad-keys [data-digit]').forEach((button) => {
+  button.addEventListener('click', () => insertKeypadText(button.dataset.digit));
+});
+letterKeyboard.addEventListener('click', (event) => {
+  const button = event.target.closest('button');
+  if (!button) return;
+  if (button.dataset.letter) insertKeypadText(button.dataset.letter);
+  else if (button.dataset.action === 'space') insertKeypadText(' ');
+  else if (button.dataset.action === 'backspace') {
+    const start = keypadEntry.selectionStart ?? keypadEntry.value.length;
+    const end = keypadEntry.selectionEnd ?? keypadEntry.value.length;
+    const deleteStart = start === end && start > 0 ? start - 1 : start;
+    keypadEntry.setRangeText('', deleteStart, end, 'end');
+    keypadEntry.focus();
+  } else if (button.dataset.action === 'shift') {
+    const uppercase = button.classList.toggle('active');
+    letterKeyboard.querySelectorAll('[data-letter]').forEach((letter) => {
+      letter.textContent = uppercase ? letter.dataset.letter.toUpperCase() : letter.dataset.letter;
+    });
+    letterKeyboard.dataset.uppercase = uppercase ? 'true' : 'false';
+  }
+});
+document.querySelectorAll('.keypad-screw').forEach((screw) => {
+  screw.addEventListener('click', () => {
+    screw.classList.add('removed');
+    screw.disabled = true;
+    if (!document.querySelector('.keypad-screw:not(.removed)')) {
+      keypadForm.classList.add('keyboard-unlocked');
+      letterKeyboard.removeAttribute('inert');
+      letterKeyboard.setAttribute('aria-hidden', 'false');
+      keypadEntry.focus();
+    }
+  });
+});
+keypadForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  keypadDialog.close('enter');
+});
+keypadDialog.addEventListener('click', (event) => {
+  if (event.target === keypadDialog) keypadDialog.close();
+});
+
+</script>
+<script src="bugs-config.js"></script>
+<script src="bugs-config-ca.js"></script>
+<script src="bugs-box.js"></script>
+<script src="simulation-controls.js"></script>
+</body>
+</html>
