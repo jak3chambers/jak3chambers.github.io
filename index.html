@@ -22,7 +22,7 @@
   }
 })();
 </script>
-<link rel="stylesheet" href="bugs-box.css">
+<link rel="stylesheet" href="css/bugs-box.css">
 <title>schematic</title>
 <style>
 
@@ -613,7 +613,7 @@ header { justify-content: space-between; align-items: flex-start; gap: 12px; min
         </div>
       </div>
     </div>
-    <a id="lock-btn" href="corner.html" aria-label="Open keypad" title="Open keypad"><img src="src/lock.png" alt=""></a>
+    <a id="lock-btn" href="html/corner.html" aria-label="Open keypad" title="Open keypad"><img src="media/lock.png" alt=""></a>
     <div class="bugs-container"></div>
     <div id="center-stack">
       <div id="name-logo"></div>
@@ -666,7 +666,7 @@ header { justify-content: space-between; align-items: flex-start; gap: 12px; min
     </form>
   </dialog>
 
-<script src="nav.js"></script>
+<script src="js/nav.js"></script>
 <script>
 /*
  * QUICK CONTENT SETTINGS
@@ -678,7 +678,7 @@ const SITE_CONFIG = IS_CATALAN ? {
   pageTitle: "Capsa d'insectes",
   creditHtml: 'Aspecte de finestres inspirat en <a href="https://www.mew151.net/" target="_blank" rel="noopener noreferrer">mew151.net</a> (<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0</a>). Model i textura de Mudkip de <a href="https://gitlab.com/cable-mc/cobblemon-assets/-/tree/master/blockbench/pokemon/gen3/0258_mudkip" target="_blank" rel="noopener noreferrer">col·laboradors de Cobblemon Assets</a>.',
   newsText: "Benvinguts a la capsa d'insectes. Cada insecte té la seva pròpia història. Descobreix-les i juga una estona. · ",
-  cornerLink: { href: "corner.html", accessibleName: "Obre el teclat" },
+  cornerLink: { href: "html/corner.html", accessibleName: "Obre el teclat" },
   logoText: "Capsa d'insectes",
   logoImage: "",
   logoImageAlt: "",
@@ -714,7 +714,7 @@ const SITE_CONFIG = IS_CATALAN ? {
   pageTitle: "",
   creditHtml: 'Window look inspired by <a href="https://www.mew151.net/" target="_blank" rel="noopener noreferrer">mew151.net</a> (<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0</a>). Mudkip model and texture from <a href="https://gitlab.com/cable-mc/cobblemon-assets/-/tree/master/blockbench/pokemon/gen3/0258_mudkip" target="_blank" rel="noopener noreferrer">Cobblemon Assets contributors</a>.',
   newsText: "example text • example text • example text • example text • example text •",
-  cornerLink: { href: "corner.html", accessibleName: "Open keypad" },
+  cornerLink: { href: "html/corner.html", accessibleName: "Open keypad" },
   logoText: "name / logo image",
   logoImage: "",
   logoImageAlt: "",
@@ -778,7 +778,12 @@ for (const [id, key] of Object.entries({
   'hat-button': 'hatsOn',
   'drag-mode-button': 'dragOn',
   'info-mode-button': 'infoOn'
-})) document.getElementById(id).textContent = SITE_CONFIG.simulationLabels[key];
+})) {
+  // Some buttons (drag / info) were removed from the page; skip any that are missing
+  // so one missing button can't stop the rest of this script (that is what broke the lock button).
+  const button = document.getElementById(id);
+  if (button) button.textContent = SITE_CONFIG.simulationLabels[key];
+}
 
 const cornerLink = document.getElementById('lock-btn');
 cornerLink.href = SITE_CONFIG.cornerLink.href;
@@ -899,13 +904,13 @@ keypadDialog.addEventListener('click', (event) => {
 });
 
 </script>
-<script src="bugs-config.js"></script>
-<script src="bugs-config-ca.js"></script>
-<script src="bugs-box.js"></script>
-<script src="simulation-controls.js"></script>
+<script src="config/bugs-config.js"></script>
+<script src="config/bugs-config-ca.js"></script>
+<script src="js/bugs-box.js"></script>
+<script src="js/simulation-controls.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="src/mudkip-model.js"></script>
-<script src="mascot-config.js"></script>
-<script src="mascot.js"></script>
+<script src="js/mudkip-model.js"></script>
+<script src="config/mascot-config.js"></script>
+<script src="js/mascot.js"></script>
 </body>
 </html>

@@ -19,8 +19,8 @@ window.MASCOT_CONFIG = {
   size: 88,                    // size in pixels (width and height)
   faceMouse: true,             // he turns to look at your mouse
 
-  /* files (paths are relative to the page, same as the staff page uses) */
-  texture: "src/mudkip.png",
+  /* files (paths are from the site root) */
+  texture: "media/mudkip/mudkip.png",
 
   /* if the 3D mudkip can't load (old phone, no WebGL), show a simple flat
      drawing instead so he can still talk. Set false to hide him instead. */

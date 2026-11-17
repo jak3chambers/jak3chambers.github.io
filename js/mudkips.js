@@ -340,7 +340,7 @@
   }, { passive: true });
 
   var textureLoader = new THREE.TextureLoader();
-  textureLoader.load('src/mudkip.png', function (texture) {
+  textureLoader.load('media/mudkip/mudkip.png', function (texture) {
     texture.magFilter = THREE.NearestFilter;
     texture.minFilter = THREE.NearestFilter;
     texture.generateMipmaps = false;

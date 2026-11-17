@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<base href="../">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script>
 (function () {
@@ -18,7 +19,7 @@
   }
 })();
 </script>
-<title>Messages</title>
+<title>I was here</title>
 <style>
   :root {
     color-scheme: light;
@@ -146,26 +147,26 @@
   </header>
 
   <main>
-    <h1 id="page-title">Messages</h1>
-    <p id="intro" class="intro local-note">This local prototype saves posts only in this browser. It does not publish to a shared server or identify visitors by IP.</p>
+    <h1 id="page-title">Leave a trace</h1>
+    <p id="intro" class="intro local-note"></p>
 
     <div class="messages-heading">
-      <h2 id="messages-heading">Messages in this browser</h2>
+      <h2 id="messages-heading">The wall</h2>
       <span id="message-count"></span>
     </div>
     <div class="form-actions">
-      <button id="make-message" type="button">Make message</button>
+      <button id="make-message" type="button">Sign the wall</button>
       <button id="clear-button" class="text-button" type="button">Clear all</button>
     </div>
 
     <form id="message-form" hidden>
       <label>
-        <span id="name-label">Name (optional)</span>
-        <input id="author" type="text" autocomplete="nickname">
+        <span id="name-label">Name</span>
+        <input id="author" type="text" autocomplete="nickname" maxlength="40" required>
       </label>
       <label>
         <span id="message-label">Message</span>
-        <textarea id="message-body" required></textarea>
+        <textarea id="message-body" maxlength="500" required></textarea>
       </label>
       <div class="form-actions">
         <button id="post-button" type="submit">Post message</button>
@@ -179,33 +180,35 @@
     </section>
   </main>
 
-<script src="nav.js"></script>
+<script src="js/nav.js"></script>
 <script>
   const isCatalan = window.PAGE_LANGUAGE === 'ca';
   const copy = isCatalan ? {
-    title: 'Missatges', home: 'Inici', make: 'Escriu un missatge', cancel: 'Cancel·la',
-    intro: 'Aquest prototip local desa els missatges només en aquest navegador. No es publiquen en un servidor compartit ni s’identifica ningú per IP.',
-    name: 'Nom (opcional)', message: 'Missatge', post: 'Publica el missatge', clear: 'Esborra-ho tot',
-    heading: 'Missatges d’aquest navegador', empty: 'Encara no hi ha cap missatge.',
+    title: 'Hi vaig ser aquí', pageHeading: 'Deixa un rastre', home: 'Inici', make: 'Signa el mur', cancel: 'Cancel·la',
+    intro: 'Escriu el teu nom i una línia. Un missatge per nom. Per ara el mur només viu en aquest navegador: ningú més el pot veure encara.',
+    name: 'Nom', message: 'Missatge', post: 'Publica el missatge', clear: 'Esborra-ho tot',
+    heading: 'El mur', empty: 'Encara no hi ha cap missatge.',
+    duplicate: 'Ja hi ha un missatge amb aquest nom. Esborra’l primer o tria un altre nom.',
     count: n => n === 1 ? '1 missatge' : n + ' missatges', anonymous: 'Anònim',
     delete: 'Esborra', blocked: 'El missatge conté llenguatge ofensiu i no s’ha publicat.', confirm: 'Vols esborrar tots els missatges d’aquest navegador?',
-    saved: 'Missatge desat en aquest navegador.', removed: 'Missatge esborrat.', cleared: 'S’han esborrat tots els missatges.',
+    saved: 'Missatge desat.', removed: 'Missatge esborrat.', cleared: 'S’han esborrat tots els missatges.',
     storageError: 'No s’ha pogut desar. Potser l’emmagatzematge del navegador és ple.',
     dateLocale: 'ca-ES'
   } : {
-    title: 'Messages', home: 'Home', make: 'Make message', cancel: 'Cancel',
-    intro: 'This local prototype saves posts only in this browser. It does not publish to a shared server or identify visitors by IP.',
-    name: 'Name (optional)', message: 'Message', post: 'Post message', clear: 'Clear all',
-    heading: 'Messages in this browser', empty: 'No messages yet.',
+    title: 'I was here', pageHeading: 'Leave a trace', home: 'Home', make: 'Sign the wall', cancel: 'Cancel',
+    intro: 'Write your name and a line. One message per name. For now the wall only lives in this browser: nobody else can see it yet.',
+    name: 'Name', message: 'Message', post: 'Post message', clear: 'Clear all',
+    heading: 'The wall', empty: 'No messages yet.',
+    duplicate: 'A message with that name is already on the wall. Delete it first or pick another name.',
     count: n => n === 1 ? '1 message' : n + ' messages', anonymous: 'Anonymous',
     delete: 'Delete', blocked: 'This message contains blocked language and was not posted.', confirm: 'Clear all messages saved in this browser?',
-    saved: 'Message saved in this browser.', removed: 'Message deleted.', cleared: 'All messages cleared.',
+    saved: 'Message posted.', removed: 'Message deleted.', cleared: 'All messages cleared.',
     storageError: 'Could not save. Browser storage may be full.',
     dateLocale: 'en-US'
   };
 
   document.title = copy.title;
-  document.getElementById('page-title').textContent = copy.title;
+  document.getElementById('page-title').textContent = copy.pageHeading;
   window.SITE_NAV.build(document.getElementById('page-nav'), 'messages', window.PAGE_LANGUAGE);
   document.getElementById('intro').textContent = copy.intro;
   document.getElementById('name-label').textContent = copy.name;
@@ -230,6 +233,11 @@
   const blockedSlurs = new RegExp('(?:^|[^a-z0-9])(?:' + blockedTerms.map(term =>
     term.split('').map(character => character.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('[^a-z0-9]*')
   ).join('|') + ')(?=$|[^a-z0-9])', 'i');
+
+  // Names are compared ignoring case, accents and extra spaces ("  Jake  " == "jake").
+  function nameKey(name) {
+    return name.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+  }
 
   function containsBlockedLanguage(text) {
     const normalized = text.normalize('NFKD')
@@ -311,9 +319,14 @@
     event.preventDefault();
     const body = document.getElementById('message-body').value.trim();
     if (!body) return;
-    const author = document.getElementById('author').value.trim();
+    const author = document.getElementById('author').value.replace(/\s+/g, ' ').trim();
+    if (!author) return;
     if (containsBlockedLanguage(body) || containsBlockedLanguage(author)) {
       statusElement.textContent = copy.blocked;
+      return;
+    }
+    if (messages.some(message => nameKey(message.author || '') === nameKey(author))) {
+      statusElement.textContent = copy.duplicate;
       return;
     }
     messages.push({ id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2), author, body, createdAt: new Date().toISOString() });

@@ -172,7 +172,7 @@
     function ensureHat(bug) {
       if (!bug || !bug.element || bug.hat) return;
       var hat = document.createElement('img');
-      hat.src = 'src/bug-hat-trim.png';
+      hat.src = 'media/bug-hat-trim.png';
       hat.alt = '';
       hat.className = 'bug-hat';
       hat.draggable = false;

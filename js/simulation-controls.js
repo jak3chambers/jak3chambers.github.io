@@ -81,19 +81,23 @@
       hatButton.textContent = hatsEnabled ? label('hatsOff', 'Hats Off') : label('hatsOn', 'Hats On');
     });
 
-    dragModeButton.addEventListener('click', function (event) {
-      event.stopPropagation();
-      dragModeEnabled = !dragModeEnabled;
-      box.setDragEnabled(dragModeEnabled);
-      dragModeButton.textContent = dragModeEnabled ? label('dragOn', 'Drag Mode On') : label('dragOff', 'Drag Mode Off');
-    });
+    if (dragModeButton) {
+      dragModeButton.addEventListener('click', function (event) {
+        event.stopPropagation();
+        dragModeEnabled = !dragModeEnabled;
+        box.setDragEnabled(dragModeEnabled);
+        dragModeButton.textContent = dragModeEnabled ? label('dragOn', 'Drag Mode On') : label('dragOff', 'Drag Mode Off');
+      });
+    }
 
-    infoModeButton.addEventListener('click', function (event) {
-      event.stopPropagation();
-      infoModeEnabled = !infoModeEnabled;
-      box.setInfoEnabled(infoModeEnabled);
-      infoModeButton.textContent = infoModeEnabled ? label('infoOn', 'Info On') : label('infoOff', 'Info Off');
-    });
+    if (infoModeButton) {
+      infoModeButton.addEventListener('click', function (event) {
+        event.stopPropagation();
+        infoModeEnabled = !infoModeEnabled;
+        box.setInfoEnabled(infoModeEnabled);
+        infoModeButton.textContent = infoModeEnabled ? label('infoOn', 'Info On') : label('infoOff', 'Info Off');
+      });
+    }
   }
 
   if (document.readyState === 'loading') {

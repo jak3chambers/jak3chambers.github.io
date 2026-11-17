@@ -2,7 +2,7 @@
    mascot.js - jak3chambers the mudkip (top-left corner of the home page)
 
    Uses the SAME mudkip model and texture as the staff page:
-     three.js r128 (loaded in index.html), src/mudkip-model.js, src/mudkip.png
+     three.js r128 (loaded in index.html), js/mudkip-model.js, media/mudkip/mudkip.png
    Words, timing and size live in mascot-config.js - you shouldn't need to
    edit this file.
 
@@ -14,7 +14,7 @@
   'use strict';
 
   var CFG = Object.assign({
-    name: 'jak3chambers', size: 88, faceMouse: true, texture: 'src/mudkip.png',
+    name: 'jak3chambers', size: 88, faceMouse: true, texture: 'media/mudkip/mudkip.png',
     firstLineDelaySeconds: 2.5, minSecondsBetween: 14, maxSecondsBetween: 32, showSeconds: 6,
     fallbackAvatar: true
   }, window.MASCOT_CONFIG || {});
@@ -315,7 +315,7 @@
   if (window.THREE && window.COBBLEMON_MUDKIP_GEOMETRY) {
     try { start3D(); } catch (error) { showFallback(error && error.message); }
   } else {
-    showFallback('three.js or src/mudkip-model.js not loaded');
+    showFallback('three.js or js/mudkip-model.js not loaded');
   }
   startTalking();
 })();

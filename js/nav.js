@@ -1,13 +1,15 @@
 /* Shared page selector. To add a page, add one line to PAGES below.
+   File paths are written from the site root (pages inside html/ set
+   <base href="../"> so the same path works from every page).
    Every page calls SITE_NAV.build(containerElement, 'pageId', language). */
 (function () {
   'use strict';
 
   var PAGES = [
-    { id: 'home',     file: 'index.html',    en: 'Home',     ca: 'Inici' },
-    { id: 'messages', file: 'messages.html', en: 'Messages', ca: 'Missatges' },
-    { id: 'staff',    file: 'staff.html',    en: 'Staff',    ca: 'Personal' },
-    { id: 'sites',    file: 'sites.html',    en: 'More',     ca: 'Més' }
+    { id: 'home',     file: 'index.html',         en: 'Home',       ca: 'Inici' },
+    { id: 'messages', file: 'html/messages.html', en: 'I was here', ca: 'Hi vaig ser aquí' },
+    { id: 'staff',    file: 'html/staff.html',    en: 'Staff',      ca: 'Personal' },
+    { id: 'sites',    file: 'html/sites.html',    en: 'More',       ca: 'Més' }
   ];
 
   function detectLanguage() {
@@ -42,7 +44,7 @@
     });
 
     // The cat button: switches the whole site to Catalan (and back to English).
-    var file = location.pathname.split('/').pop() || 'index.html';
+    var file = location.pathname;
     var toggle = document.createElement('a');
     var target = language === 'ca' ? 'en' : 'ca';
     toggle.className = 'lang-toggle';
