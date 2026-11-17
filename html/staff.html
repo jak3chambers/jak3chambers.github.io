@@ -81,6 +81,8 @@
 
 <script src="js/nav.js"></script>
 <script src="config/staff-config.js"></script>
+<script src="config/firebase-config.js"></script>
+<script src="js/site-db.js"></script>
 <script>
 (function () {
   'use strict';
@@ -147,7 +149,45 @@
       else localStorage.setItem(STORE, JSON.stringify({ month: monthKey, id: id }));
     } catch (_) {}
   }
-  function tally(e) { return e.baseVotes + (getChoice() === e.id ? 1 : 0); }
+  // Shared votes (when config/firebase-config.js is filled in): counts come from Firestore.
+  // Each browser remembers its own pick so you can see it, change it, or take it back.
+  var remote = !!(window.SiteDB && window.SiteDB.enabled);
+  var counts = {};
+  function loadCounts() {
+    if (!remote) return Promise.resolve();
+    return window.SiteDB.list('votes').then(function (docs) {
+      var data = {};
+      docs.forEach(function (doc) {
+        var parts = doc.id.split('_');
+        if (parts[0] === monthKey && typeof doc.count === 'number') data[Number(parts[1])] = Math.max(0, doc.count);
+      });
+      counts = data;
+      render();
+    }).catch(function () {});
+  }
+  function tally(e) {
+    if (remote) return e.baseVotes + (counts[e.id] || 0);
+    return e.baseVotes + (getChoice() === e.id ? 1 : 0);
+  }
+  function castVote(e) {
+    var previous = getChoice();
+    var next = previous === e.id ? null : e.id;
+    setChoice(next);
+    if (remote) {
+      var changes = [];
+      if (previous !== null) changes.push({ collection: 'votes', id: monthKey + '_' + previous, field: 'count', delta: -1 });
+      if (next !== null) changes.push({ collection: 'votes', id: monthKey + '_' + next, field: 'count', delta: 1 });
+      if (previous !== null) counts[previous] = Math.max(0, (counts[previous] || 0) - 1);
+      if (next !== null) counts[next] = (counts[next] || 0) + 1;
+      render();
+      window.SiteDB.increment(changes).catch(function () {
+        setChoice(previous);   // the vote did not go through: put things back
+        return loadCounts();
+      }).then(render);
+      return;
+    }
+    render();
+  }
 
   function makePhoto(e) {
     function placeholder() {
@@ -197,10 +237,7 @@
       btn.type = 'button';
       btn.textContent = choice === e.id ? T.voted : T.vote;
       btn.setAttribute('aria-pressed', choice === e.id ? 'true' : 'false');
-      btn.addEventListener('click', function () {
-        setChoice(getChoice() === e.id ? null : e.id);
-        render();
-      });
+      btn.addEventListener('click', function () { castVote(e); });
       row.append(count, btn);
       body.append(name, job, desc, row);
       card.append(makePhoto(e), body);
@@ -210,6 +247,10 @@
 
   function render() { renderEotm(); renderGrid(); }
   render();
+  if (remote) {
+    loadCounts();
+    setInterval(loadCounts, 60000);
+  }
 })();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
