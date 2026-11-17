@@ -401,6 +401,188 @@
     #links-dropdown summary { transition: none; }
   }
 </style>
+<style id="mew-theme">
+/* ===========================================================
+   MEW-STYLE THEME  (colours and the pink-bevel "window" look are modelled on
+   mew151.net by meisekimiu, CC BY-NC-SA 4.0 - see the credit line at the
+   bottom of the page). The CSS below is written from scratch; only the
+   colour values and the general bevelled-window idea are shared.
+   Change the colours here and the whole page follows.
+   The keypad is deliberately untouched.
+   =========================================================== */
+:root {
+  --mew-weave-dark:  #2c091c;   /* page background tile */
+  --mew-weave-light: #73284b;
+  --mew-hi:          #f0a1c5;   /* bevel highlight (top / left edges) */
+  --mew-lo:          #621f41;   /* bevel shadow (bottom / right edges) */
+  --mew-bar:         #b24e7b;   /* title bars and buttons */
+  --mew-bar-hover:   #c45f8c;
+  --mew-bar-down:    #8f3a62;
+  --mew-bar-text:    #ffdada;
+  --mew-panel:       #ffdada;   /* pale pink panels */
+  --mew-panel-text:  #250025;
+  --mew-content:     #2c091c;   /* the dark plum the bugs bounce around in */
+  --mew-content-text:#eeeeee;
+  --mew-ui-font: "Liberation Sans", Arial, Helvetica, sans-serif;
+  --mew-serif:   "Times New Roman", Times, serif;
+  --mew-weave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' shape-rendering='crispEdges'%3E%3Crect width='8' height='8' fill='%232c091c'/%3E%3Cpath fill='%2373284b' d='M0 0h2v2H0zM2 2h2v2H2zM6 4h2v2H6zM4 6h2v2H4z'/%3E%3C/svg%3E");
+
+  --page-text-color: var(--mew-content-text);
+  --page-background-image: var(--mew-weave);
+  --page-background-size: 8px 8px;
+  --page-background-position: 0 0;
+  --page-padding: 16px;
+  --layout-gap: 12px;
+}
+
+body {
+  grid-template-rows: auto auto 1fr auto;
+  background-color: var(--mew-weave-dark);
+  background-repeat: repeat;
+  font-family: var(--mew-serif);
+}
+
+/* ---- header: [mudkip] [speech bubble ......] [page links] ---- */
+header { justify-content: space-between; align-items: flex-start; gap: 12px; min-height: 8px; z-index: 5; }  /* above the ticker so the speech bubble can overlap it */
+@media (max-width: 520px) { header { padding-left: 0; } }
+
+#page-selector {
+  margin-left: auto;
+  padding: 4px;
+  gap: 4px;
+  background: var(--mew-panel);
+  border: 2px solid;
+  border-color: var(--mew-hi) var(--mew-lo) var(--mew-lo) var(--mew-hi);
+}
+#page-selector a, #page-selector span {
+  padding: 2px 12px;
+  background: var(--mew-bar);
+  color: var(--mew-bar-text);
+  border: 2px solid;
+  border-color: var(--mew-hi) var(--mew-lo) var(--mew-lo) var(--mew-hi);
+  font: 15px/1.3 var(--mew-ui-font);
+  text-decoration: none;
+}
+#page-selector a:hover { background: var(--mew-bar-hover); }
+#page-selector a:active { border-color: var(--mew-lo) var(--mew-hi) var(--mew-hi) var(--mew-lo); }
+#page-selector span[aria-current] {
+  background: var(--mew-bar-down);
+  color: #fff;
+  font-weight: 700;
+  border-color: var(--mew-lo) var(--mew-hi) var(--mew-hi) var(--mew-lo);
+}
+
+/* ---- rolling text: a sunken pale-pink strip ---- */
+#news-bar {
+  background: var(--mew-panel);
+  color: var(--mew-panel-text);
+  border: 2px solid;
+  border-color: var(--mew-lo) var(--mew-hi) var(--mew-hi) var(--mew-lo);
+  font: 15px/1.3 var(--mew-ui-font);
+}
+
+/* ---- the bug box = a window with a title bar ---- */
+#ball-box {
+  background: var(--mew-content);
+  color: var(--mew-content-text);
+  border: 2px solid;
+  border-color: var(--mew-hi) var(--mew-lo) var(--mew-lo) var(--mew-hi);
+  box-shadow: inset 2px 2px 0 var(--mew-lo), inset -2px -2px 0 var(--mew-hi);
+  padding: 0;
+  --title-h: 22px;
+}
+#ball-box::before {            /* title bar; its text comes from the page title */
+  content: attr(data-label);
+  position: absolute;
+  top: 2px; left: 2px; right: 2px;
+  height: var(--title-h);
+  padding: 0;
+  z-index: 6;
+  background: var(--mew-bar);
+  color: var(--mew-bar-text);
+  border: 1px solid;
+  border-color: var(--mew-hi) var(--mew-lo) var(--mew-lo) var(--mew-hi);
+  font: bold 17px/20px var(--mew-serif);
+  text-align: center;
+  pointer-events: none;
+}
+#ball-box .bugs-container { inset: calc(var(--title-h) + 4px) 2px 2px 2px; }
+#box-controls { top: calc(var(--title-h) + 4px + var(--box-padding)); left: calc(2px + var(--box-padding)); width: calc(100% - 4px - 2 * var(--box-padding)); }
+#lock-btn { top: calc(var(--title-h) + 4px + var(--box-padding)); left: calc(2px + var(--box-padding)); }
+
+#box-controls .button-group {
+  background: var(--mew-panel);
+  border: 2px solid;
+  border-color: var(--mew-lo) var(--mew-hi) var(--mew-hi) var(--mew-lo);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 5px;
+}
+#box-controls .button-tray button {
+  padding: 5px 14px;
+  background: var(--mew-bar);
+  color: var(--mew-bar-text);
+  border: 2px solid;
+  border-color: var(--mew-hi) var(--mew-lo) var(--mew-lo) var(--mew-hi);
+  border-radius: 0;
+  box-shadow: none;
+  font: bold 14px/1.3 var(--mew-ui-font);
+}
+#box-controls .button-tray button:hover:not(:disabled) { background: var(--mew-bar-hover); border-color: var(--mew-hi) var(--mew-lo) var(--mew-lo) var(--mew-hi); }
+#box-controls .button-tray button:active:not(:disabled) {
+  transform: none; box-shadow: none; background: var(--mew-bar-down);
+  border-color: var(--mew-lo) var(--mew-hi) var(--mew-hi) var(--mew-lo);
+}
+
+/* ---- name / logo panel and links ---- */
+#name-logo {
+  background: var(--mew-panel);
+  color: var(--mew-panel-text);
+  border: 2px solid;
+  border-color: var(--mew-hi) var(--mew-lo) var(--mew-lo) var(--mew-hi);
+  box-shadow: inset 2px 2px 0 var(--mew-lo), inset -2px -2px 0 var(--mew-hi);
+  font: bold clamp(24px, 4vw, 44px)/1.1 var(--mew-serif);
+}
+#links-dropdown summary {
+  background: var(--mew-bar);
+  color: var(--mew-bar-text);
+  border: 2px solid;
+  border-color: var(--mew-hi) var(--mew-lo) var(--mew-lo) var(--mew-hi);
+  font: 15px/1.3 var(--mew-ui-font);
+  padding: 2px 12px;
+}
+#links-dropdown summary:hover { transform: none; text-shadow: none; background: var(--mew-bar-hover); }
+#links-dropdown ul {
+  background: var(--mew-panel);
+  color: var(--mew-panel-text);
+  border: 2px solid;
+  border-color: var(--mew-hi) var(--mew-lo) var(--mew-lo) var(--mew-hi);
+  font: 15px/1.3 var(--mew-ui-font);
+}
+#links-dropdown li a { color: var(--mew-panel-text); text-decoration: none; }
+#links-dropdown li a:hover { background: var(--mew-bar); color: var(--mew-bar-text); }
+
+/* ---- credit: small "i" button that opens a pop-up ---- */
+#credit-row { position: relative; display: flex; justify-content: flex-end; padding: 2px 0; }
+#credit-btn {
+  width: 24px; height: 24px; padding: 0; cursor: pointer;
+  background: var(--mew-bar); color: var(--mew-bar-text);
+  border: 2px solid; border-color: var(--mew-hi) var(--mew-lo) var(--mew-lo) var(--mew-hi);
+  font: italic bold 15px/1 var(--mew-serif);
+}
+#credit-btn:hover { background: var(--mew-bar-hover); }
+#credit-btn[aria-expanded="true"] { background: var(--mew-bar-down); border-color: var(--mew-lo) var(--mew-hi) var(--mew-hi) var(--mew-lo); }
+#credit-btn:focus-visible { outline: 2px solid var(--mew-hi); outline-offset: 2px; }
+#credit-panel {
+  position: absolute; bottom: calc(100% + 4px); left: 50%; transform: translateX(-50%); z-index: 40;
+  width: min(420px, calc(100vw - 32px)); padding: 8px 12px; text-align: left;
+  background: var(--mew-panel); color: var(--mew-panel-text);
+  border: 2px solid; border-color: var(--mew-hi) var(--mew-lo) var(--mew-lo) var(--mew-hi);
+  font: 14px/1.45 var(--mew-ui-font);
+}
+#credit-panel[hidden] { display: none; }
+#credit-panel a { color: var(--mew-bar-down); }
+</style>
 </head>
 <body>
 
@@ -426,8 +608,8 @@
           <button id="destroy-button" type="button">Death</button>
           <button id="create-button" type="button">Life</button>
           <button id="hat-button" type="button">Hats On</button>
-          <button id="drag-mode-button" type="button">Drag Mode On</button>
-          <button id="info-mode-button" type="button">Info On</button>
+          
+         
         </div>
       </div>
     </div>
@@ -441,6 +623,11 @@
       </details>
     </div>
   </main>
+
+  <div id="credit-row">
+    <div id="credit-panel" role="region" hidden></div>
+    <button id="credit-btn" type="button" aria-expanded="false" aria-controls="credit-panel">i</button>
+  </div>
 
   <dialog id="keypad-dialog" aria-label="Keypad">
     <form id="keypad-form">
@@ -489,6 +676,7 @@
 const IS_CATALAN = window.SITE_LANGUAGE === 'ca';
 const SITE_CONFIG = IS_CATALAN ? {
   pageTitle: "Capsa d'insectes",
+  creditHtml: 'Aspecte de finestres inspirat en <a href="https://www.mew151.net/" target="_blank" rel="noopener noreferrer">mew151.net</a> (<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0</a>). Model i textura de Mudkip de <a href="https://gitlab.com/cable-mc/cobblemon-assets/-/tree/master/blockbench/pokemon/gen3/0258_mudkip" target="_blank" rel="noopener noreferrer">col·laboradors de Cobblemon Assets</a>.',
   newsText: "Benvinguts a la capsa d'insectes. Cada insecte té la seva pròpia història. Descobreix-les i juga una estona. · ",
   cornerLink: { href: "corner.html", accessibleName: "Obre el teclat" },
   logoText: "Capsa d'insectes",
@@ -523,7 +711,8 @@ const SITE_CONFIG = IS_CATALAN ? {
     infoOn: "Informació activada", infoOff: "Informació desactivada"
   }
 } : {
-  pageTitle: "schematic",
+  pageTitle: "",
+  creditHtml: 'Window look inspired by <a href="https://www.mew151.net/" target="_blank" rel="noopener noreferrer">mew151.net</a> (<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0</a>). Mudkip model and texture from <a href="https://gitlab.com/cable-mc/cobblemon-assets/-/tree/master/blockbench/pokemon/gen3/0258_mudkip" target="_blank" rel="noopener noreferrer">Cobblemon Assets contributors</a>.',
   newsText: "example text • example text • example text • example text • example text •",
   cornerLink: { href: "corner.html", accessibleName: "Open keypad" },
   logoText: "name / logo image",
@@ -561,6 +750,20 @@ const SITE_CONFIG = IS_CATALAN ? {
 window.SIMULATION_LABELS = SITE_CONFIG.simulationLabels;
 
 document.title = SITE_CONFIG.pageTitle;
+document.getElementById('ball-box').dataset.label = SITE_CONFIG.pageTitle;
+const creditBtn = document.getElementById('credit-btn');
+const creditPanel = document.getElementById('credit-panel');
+const creditLabel = IS_CATALAN ? 'Crèdits' : 'Credits';
+creditPanel.innerHTML = SITE_CONFIG.creditHtml;
+creditPanel.setAttribute('aria-label', creditLabel);
+creditBtn.title = creditLabel;
+creditBtn.setAttribute('aria-label', creditLabel);
+function setCreditOpen(open) { creditPanel.hidden = !open; creditBtn.setAttribute('aria-expanded', String(open)); }
+creditBtn.addEventListener('click', () => setCreditOpen(creditPanel.hidden));
+document.addEventListener('click', (event) => {
+  if (!creditPanel.hidden && !creditPanel.contains(event.target) && !creditBtn.contains(event.target)) setCreditOpen(false);
+}, true);
+document.addEventListener('keydown', (event) => { if (event.key === 'Escape') setCreditOpen(false); });
 const pageSelector = document.getElementById('page-selector');
 window.SITE_NAV.build(pageSelector, 'home', window.SITE_LANGUAGE);
 
@@ -700,5 +903,9 @@ keypadDialog.addEventListener('click', (event) => {
 <script src="bugs-config-ca.js"></script>
 <script src="bugs-box.js"></script>
 <script src="simulation-controls.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="src/mudkip-model.js"></script>
+<script src="mascot-config.js"></script>
+<script src="mascot.js"></script>
 </body>
 </html>
