@@ -22,19 +22,22 @@
   #banner { margin: 0; padding: 18px 16px; border: 1px dashed var(--green); background: var(--panel); color: var(--text); font-size: clamp(18px, 2.6vw, 30px); text-align: center; }
   #banner a { color: var(--green); }
   #page-nav { align-self: flex-end; display: flex; flex-wrap: wrap; gap: 8px; padding: 8px; border: 1px dashed var(--green); background: var(--panel); }
-  #page-nav a, #page-nav span { border: 1px solid var(--green); padding: 2px 10px; color: var(--green); background: var(--bg); font-size: 14px; text-decoration: none; }
+  #page-nav a, #page-nav span { border: 1px solid var(--green); padding: 2px 10px; color: var(--green); background: var(--bg); font-size: 16px; text-decoration: none; }
   #page-nav a:hover { background: var(--panel-2); color: #fff; }
   #page-nav span[aria-current] { background: var(--green); color: var(--bg); font-weight: 700; }
-  .panes { display: grid; flex: 1; grid-template-columns: 1fr 1fr; gap: 8px; min-height: 0; padding: 0 8px 8px; }
+  .panes { display: grid; flex: 1; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 8px; min-height: 0; padding: 0 8px 8px; }
+  .pane-video { grid-column: 1 / -1; }
   .pane { display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); background: var(--panel); }
-  .pane-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 8px; font-size: 13px; }
+  .pane-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 8px; font-size: 16px; }
   .pane-bar a { color: var(--green); }
   iframe { flex: 1; width: 100%; min-height: 0; border: 0; background: #fff; }
   @media (max-width: 760px) {
     #page-nav { align-self: stretch; justify-content: center; }
-    .panes { grid-template-columns: 1fr; grid-auto-rows: 70vh; overflow: auto; }
+    .panes { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-rows: 70vh; overflow: auto; }
+    .pane-video { grid-column: auto; }
   }
 </style>
+<link rel="stylesheet" href="css/site-text.css">
 </head>
 <body>
   <header>
@@ -49,6 +52,10 @@
     <section class="pane">
       <div class="pane-bar"><strong>pokemonshowdown.com</strong><a id="open-showdown" href="https://pokemonshowdown.com/" target="_blank" rel="noopener noreferrer"></a></div>
       <iframe id="frame-showdown" src="https://pokemonshowdown.com/" title="Pokémon Showdown" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
+    </section>
+    <section class="pane pane-video">
+      <div class="pane-bar"><strong>youtube.com</strong><a id="open-video" href="https://www.youtube.com/watch?v=6YsNRnZRgg8" target="_blank" rel="noopener noreferrer"></a></div>
+      <iframe id="frame-video" src="https://www.youtube-nocookie.com/embed/6YsNRnZRgg8" title="tribute to anomalocaris" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </section>
   </div>
 
@@ -65,13 +72,16 @@
   var banner = document.getElementById('banner');
   var bugs = '<a href="https://28awesomebugs.org/" target="_blank" rel="noopener noreferrer">28awesomebugs</a>';
   var showdown = '<a href="https://pokemonshowdown.com/" target="_blank" rel="noopener noreferrer">showdown.com</a>';
+  var tribute = '<a href="https://www.youtube.com/watch?v=6YsNRnZRgg8" target="_blank" rel="noopener noreferrer">' + (ca ? 'tribut a l’anomalocaris' : 'tribute to anomalocaris') + '</a>';
   banner.innerHTML = ca
-    ? 'La resta del meu web està dedicada a ' + bugs + ' i ' + showdown
-    : 'the rest of my website is dedicated to ' + bugs + ' and ' + showdown;
+    ? 'La resta del meu web està dedicada a ' + bugs + ', ' + showdown + ' i al ' + tribute
+    : 'the rest of my website is dedicated to ' + bugs + ', ' + showdown + ' and the ' + tribute;
 
   var openText = ca ? 'obre en una pestanya nova ↗' : 'open in new tab ↗';
   document.getElementById('open-bugs').textContent = openText;
   document.getElementById('open-showdown').textContent = openText;
+  document.getElementById('open-video').textContent = openText;
+  document.getElementById('frame-video').title = ca ? 'tribut a l’anomalocaris' : 'tribute to anomalocaris';
 })();
 </script>
 </body>

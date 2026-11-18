@@ -46,6 +46,7 @@
     var dragEnabled = cfg.drag !== false;
     var infoEnabled = cfg.clickInfo !== false;
     var hatsEnabled = false;
+    var allowDuplicates = cfg.allowDuplicates === true;
     var roster = (cfg.bugs && cfg.bugs.length) ? cfg.bugs : [{ image: '', name: 'Bug', story: '', birthday: '' }];
 
     var bugData = [];
@@ -191,8 +192,21 @@
       bug.hat = null;
     }
 
+    // A roster entry is "on screen" if a bug with the same image/name is in the box.
+    function rosterKey(entry) { return (entry.image || '') + '|' + (entry.name || ''); }
+    function pickUnusedBug() {
+      var onScreen = {};
+      bugData.forEach(function (b) { onScreen[b.key] = true; });
+      var free = roster.filter(function (entry) { return !onScreen[rosterKey(entry)]; });
+      if (free.length) return free[Math.floor(Math.random() * free.length)];
+      // every bug is already in the box: only repeat if config says that's allowed
+      return allowDuplicates ? roster[Math.floor(Math.random() * roster.length)] : null;
+    }
+
+    // returns true if a bug was added, false if there was no unused bug left to add
     function addBug(info) {
-      info = info || roster[Math.floor(Math.random() * roster.length)];
+      info = info || pickUnusedBug();
+      if (!info) return false;
       var size = getSize();
       var img = document.createElement('img');
       img.className = 'bug';
@@ -221,7 +235,7 @@
       var bug = {
         element: img, x: x, y: y,
         dx: (Math.random() - 0.5) * 5, dy: (Math.random() - 0.5) * 5, hat: null,
-        mass: 1, radius: size / 2, drag: 0.995, _uid: uidCounter++
+        mass: 1, radius: size / 2, drag: 0.995, _uid: uidCounter++, key: rosterKey(info)
       };
       bugData.push(bug);
       if (hatsEnabled) ensureHat(bug);
@@ -231,6 +245,7 @@
         if (img._wasDragged) { img._wasDragged = false; return; }
         if (infoEnabled) showInfo(img);
       });
+      return true;
     }
 
     function removeBugAt(index) {
@@ -254,7 +269,7 @@
       while (bugData.length > n) {
         removeBugAt(bugData.length - 1);
       }
-      while (bugData.length < n) addBug();
+      while (bugData.length < n) { if (!addBug()) break; }   // stop if there are no unused bugs left
     }
 
     // initial set: shuffle the roster so you get a random selection each load
@@ -264,6 +279,8 @@
       var t = pool[i]; pool[i] = pool[j]; pool[j] = t;
     }
     var count = cfg.count != null ? cfg.count : 28;
+    // asking for more bugs than the list has used to repeat some; now it stops at the list size
+    if (!allowDuplicates) count = Math.min(count, pool.length);
     for (var k = 0; k < count; k++) addBug(pool[k % pool.length]);
 
     /* ---------- physics (ported from the original) ---------- */
@@ -509,7 +526,7 @@
       settings: settings,
       bugs: bugData,
       setCount: setCount,
-      addBug: function () { addBug(); },
+      addBug: function () { return addBug(); },
       removeBug: removeBugAt,
       freeze: function () { running = false; },
       unfreeze: function () { if (!running) { running = true; requestFrame(); } },

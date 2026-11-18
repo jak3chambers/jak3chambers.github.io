@@ -54,5 +54,20 @@
     container.append(toggle);
   }
 
+  // The browser-tab title can't be styled with css, so keep it lowercase here.
+  (function keepTitleLowercase() {
+    function lower() {
+      var lowered = document.title.toLowerCase();
+      if (document.title !== lowered) document.title = lowered;
+    }
+    function watch() {
+      var titleElement = document.querySelector('title');
+      if (titleElement) new MutationObserver(lower).observe(titleElement, { childList: true, characterData: true, subtree: true });
+      lower();
+    }
+    if (document.querySelector('title')) watch();
+    else document.addEventListener('DOMContentLoaded', watch);
+  })();
+
   window.SITE_NAV = { pages: PAGES, build: build, language: detectLanguage() };
 })();

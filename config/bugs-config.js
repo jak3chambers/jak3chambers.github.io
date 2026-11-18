@@ -4,9 +4,11 @@
    =========================================================== */
 window.BUGS_CONFIG = {
 
-  /* how many bugs are in the box at once. They're picked at random
-     from the list below; if it has fewer than this, some repeat. */
+  /* how many bugs are in the box at once, picked at random from the list
+     below. If the list is shorter than this you get one of each (no repeats),
+     unless allowDuplicates is true. */
   count: 28,
+  allowDuplicates: false,   // true = the same bug may appear more than once
 
   /* bug size in pixels (phones use mobileSize, under 768px wide) */
   size: 150,

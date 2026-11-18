@@ -40,12 +40,12 @@
     '#mascot-btn:focus-visible{outline:2px solid var(--mew-hi,#f0a1c5);outline-offset:2px}' +
     '#mascot-canvas,#mascot-fallback{display:block;width:100%;height:100%}' +
     '#mascot-name{position:absolute;left:50%;bottom:0;transform:translateX(-50%);white-space:nowrap;padding:0 6px;' +
-      'font:bold 11px/16px "Liberation Sans",Arial,sans-serif;background:var(--mew-bar,#b24e7b);color:var(--mew-bar-text,#ffdada);' +
+      'font:bold 14px/18px "Liberation Sans",Arial,sans-serif;background:var(--mew-bar,#b24e7b);color:var(--mew-bar-text,#ffdada);' +
       'border:1px solid;border-color:var(--mew-hi,#f0a1c5) var(--mew-lo,#621f41) var(--mew-lo,#621f41) var(--mew-hi,#f0a1c5);pointer-events:none}' +
     '#mascot-bubble{position:absolute;left:calc(100% + 10px);top:6px;z-index:30;width:max-content;max-width:min(340px,calc(100vw - 150px));' +
       'padding:6px 10px;background:var(--mew-panel,#ffdada);color:var(--mew-panel-text,#250025);' +
       'border:2px solid;border-color:var(--mew-hi,#f0a1c5) var(--mew-lo,#621f41) var(--mew-lo,#621f41) var(--mew-hi,#f0a1c5);' +
-      'font:14px/1.35 "Liberation Sans",Arial,sans-serif;opacity:0;visibility:hidden;transform:translateY(4px);pointer-events:none;' +
+      'font:17px/1.35 "Liberation Sans",Arial,sans-serif;opacity:0;visibility:hidden;transform:translateY(4px);pointer-events:none;' +
       'transition:opacity .15s,transform .15s,visibility 0s .15s}' +
     '#mascot-bubble.on{opacity:1;visibility:visible;transform:none;transition-delay:0s}' +
     '#mascot-bubble::before{content:"";position:absolute;left:-9px;top:8px;border:7px solid transparent;border-left-width:0;border-right-color:var(--mew-lo,#621f41)}' +
@@ -110,6 +110,8 @@
     setTimeout(function () { if (greeting) say(greeting); }, CFG.firstLineDelaySeconds * 1000);
     scheduleNext();
   }
+  // lets other scripts (the keypad codes) make him talk:  window.mascot.say('text', seconds)
+  window.mascot = { say: say };
   btn.addEventListener('click', function () {
     var list = textsFor('clickLines');
     say(pick(list.length ? list : textsFor('lines')));

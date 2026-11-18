@@ -48,7 +48,7 @@
     background: #0c0c0c;
     color: #e0e0e0;
     font-family: 'Courier New', 'Consolas', monospace;
-    font-size: 13px;
+    font-size: 16px;
     line-height: 1.5;
     padding: 0;
     border: 1px solid rgba(200, 200, 200, 0.2);
@@ -125,7 +125,7 @@
 }
 
 .bug-info-box .bug-info-name {
-    font-size: 15px;
+    font-size: 17px;
     font-weight: bold;
     color: #ffffff;
     text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
@@ -143,12 +143,12 @@
 .bug-info-box .bug-info-story {
     margin: 6px 0 8px;
     color: #d0d0d0;
-    font-size: 12.5px;
+    font-size: 15px;
 }
 
 .bug-info-box .bug-info-born {
     color: #999;
-    font-size: 11px;
+    font-size: 14px;
     font-style: italic;
 }
 
@@ -285,7 +285,7 @@
     .bug-info-box {
         width: auto;
         max-width: calc(100% - 20px);
-        font-size: 14px;
+        font-size: 16px;
     }
 }
 

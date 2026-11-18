@@ -1,0 +1,14 @@
+/* ===========================================================
+   site-text.css - the two site-wide text rules, loaded by every page.
+     1. everything is comic sans
+     2. everything is lowercase (english AND catalan, including text that
+        scripts add later, like the mascot's speech bubble)
+   Delete a rule here to undo it everywhere. The lowercase rule only changes
+   how text LOOKS; what people type into boxes is saved exactly as typed.
+   Phones/computers without comic sans (android, linux) fall back to the
+   browser's generic handwriting font.
+   =========================================================== */
+html, body, body *, button, input, textarea, select, option, summary {
+  font-family: "Comic Sans MS", "Comic Sans", "Comic Neue", "Chalkboard SE", "Marker Felt", cursive !important;
+  text-transform: lowercase !important;
+}

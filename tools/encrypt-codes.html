@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>hide keypad codes</title>
+<style>
+  body { max-width: 860px; margin: 24px auto; padding: 0 16px; font: 16px/1.5 sans-serif; color: #222; background: #f4f4f4; }
+  h1 { margin: 0 0 4px; font-size: 24px; }
+  code, textarea { font-family: monospace; }
+  textarea { display: block; width: 100%; min-height: 230px; padding: 8px; box-sizing: border-box; font-size: 14px; }
+  #output { min-height: 150px; background: #eaeaea; }
+  button { margin: 10px 8px 0 0; padding: 8px 16px; font-size: 16px; cursor: pointer; }
+  .box { margin: 14px 0; padding: 10px 14px; background: #fff; border: 1px solid #ccc; }
+  #problems { color: #a00; white-space: pre-wrap; }
+  #warnings { color: #8a5a00; white-space: pre-wrap; }
+  #ok { color: #060; }
+</style>
+</head>
+<body>
+<h1>hide keypad codes</h1>
+<p>Turns your secret codes into scrambled data that can't be read in the page source. This page runs only in your browser; nothing you type here is sent anywhere.</p>
+
+<div class="box">
+  <strong>Steps</strong>
+  <ol>
+    <li><strong>Open this file from your own computer</strong> (double-click <code>tools/encrypt-codes.html</code>), not from the live website.</li>
+    <li>Write your secret codes below, one <code>{ ... }</code> block each, same format as <code>config/keypad-codes.js</code> (code, say, image, caption, message, download, downloadText, sound, link, newTab, title, keepOpen).</li>
+    <li>Press <em>hide them</em>, then <em>download keypad-secrets.js</em>. Put that file in your <code>config/</code> folder (replace the old one), commit and push.</li>
+    <li><strong>Keep your plain list private.</strong> Save the text from the box below in a file called <code>private/secret-codes.txt</code>. The <code>private/</code> folder is ignored by git, so it never gets uploaded. Next time you add a code, paste the whole list back in here and run it again.</li>
+  </ol>
+</div>
+
+<textarea id="source" spellcheck="false">[
+  { code: "secret handshake",
+    say: "psst. only friends know this one.",
+    message: "it works. now write your own codes here and press the button." },
+
+  // { code: "an inside joke only your friends know", image: "media/unlisted-name-8f3k.png", caption: "ha" },
+  // { codes: ["first way", "second way"], downloadText: { filename: "note.txt", text: "hi" } },
+]</textarea>
+<button id="go" type="button">hide them</button>
+
+<div class="box" id="status" hidden>
+  <div id="problems"></div>
+  <div id="warnings"></div>
+  <div id="ok"></div>
+</div>
+
+<textarea id="output" readonly spellcheck="false" placeholder="the scrambled file appears here"></textarea>
+<button id="copy" type="button" disabled>copy</button>
+<button id="download" type="button" disabled>download keypad-secrets.js</button>
+
+<div class="box">
+  <strong>Good to know</strong>
+  <ul>
+    <li><strong>The code is the password.</strong> Short or common codes can be guessed by a computer in seconds, whatever the encryption: any number under about 9 digits, any single word. Use phrases only your friends would know: several words, an inside joke, a nickname plus a date.</li>
+    <li><strong>What the code does is hidden too</strong> (the message, which picture, the file name), but a picture or download that sits in your <code>media/</code> folder is still a public file in your public GitHub repo. Give it an unguessable name (like <code>unlisted-8f3k2.png</code>), or use <code>message</code> / <code>downloadText</code>, which live fully inside the scrambled data.</li>
+    <li>Hidden codes can't use <code>run</code> (custom JavaScript) or <code>auto</code>. Use <code>config/keypad-codes.js</code> for those.</li>
+    <li>Hidden codes take a moment to check (about a quarter of a second) after you press enter. That slowness is what makes guessing hard.</li>
+  </ul>
+</div>
+
+<script src="../js/keypad-crypto.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var ALLOWED = ['code', 'codes', 'say', 'sayForSeconds', 'image', 'caption', 'message', 'title', 'download', 'filename', 'downloadText', 'sound', 'link', 'newTab', 'keepOpen'];
+  var lastFile = '';
+
+  function warn(code) {
+    var key = KeypadCrypto.normalize(code);
+    if (/^[0-9]+$/.test(key) && key.length < 9) return '"' + code + '" is only digits and short: a computer finds it instantly.';
+    if (key.length < 8) return '"' + code + '" is short: easy to guess.';
+    if (/^[a-z]+$/.test(key)) return '"' + code + '" is a single word: a dictionary attack finds it fast. Add more words.';
+    return '';
+  }
+
+  $('go').addEventListener('click', function () {
+    var problems = [], warnings = [];
+    $('status').hidden = false; $('problems').textContent = ''; $('warnings').textContent = ''; $('ok').textContent = '';
+    $('output').value = ''; $('copy').disabled = true; $('download').disabled = true;
+    if (!KeypadCrypto.available) { $('problems').textContent = 'This browser can\'t do encryption here. Open this file from your computer (double-click) in a recent Chrome, Edge, Firefox or Safari.'; return; }
+
+    var list;
+    try { list = (new Function('return (' + $('source').value + '\n)'))(); }
+    catch (error) { $('problems').textContent = 'Could not read your list: ' + error.message + '\nCheck for a missing comma, bracket or quote.'; return; }
+    if (!Array.isArray(list)) { $('problems').textContent = 'The list must start with [ and end with ].'; return; }
+
+    var jobs = [], seen = {};
+    list.forEach(function (item, index) {
+      var label = 'entry ' + (index + 1);
+      if (!item || typeof item !== 'object') { problems.push(label + ': not a { ... } block'); return; }
+      var codes = item.codes || (item.code != null ? [item.code] : []);
+      if (!codes.length) { problems.push(label + ': has no code'); return; }
+      var what = {};
+      Object.keys(item).forEach(function (key) {
+        if (key === 'code' || key === 'codes') return;
+        if (typeof item[key] === 'function') { problems.push(label + ': "' + key + '" is a function; hidden codes can\'t run JavaScript'); return; }
+        if (key === 'auto') { warnings.push(label + ': "auto" is ignored for hidden codes (you press enter).'); return; }
+        if (ALLOWED.indexOf(key) < 0) { warnings.push(label + ': unknown setting "' + key + '" (kept, but nothing uses it)'); }
+        what[key] = item[key];
+      });
+      codes.forEach(function (code) {
+        var key = KeypadCrypto.normalize(code);
+        if (!key) { problems.push(label + ': an empty code'); return; }
+        if (seen[key]) { problems.push(label + ': the code "' + code + '" is used twice'); return; }
+        seen[key] = true;
+        var w = warn(code); if (w) warnings.push(w);
+        jobs.push({ code: code, what: what });
+      });
+    });
+    if (!jobs.length && !problems.length) problems.push('There are no codes in the list.');
+    $('warnings').textContent = warnings.join('\n');
+    if (problems.length) { $('problems').textContent = problems.join('\n'); return; }
+
+    var salt = KeypadCrypto.randomSalt(), iterations = KeypadCrypto.iterations;
+    $('ok').textContent = 'working…';
+    Promise.all(jobs.map(function (job) { return KeypadCrypto.encryptEntry(job.code, job.what, salt, iterations); }))
+      .then(function (entries) {
+        var secrets = { v: 1, iterations: iterations, salt: salt, entries: entries };
+        // prove every code opens its own entry before handing the file over
+        return Promise.all(jobs.map(function (job) { return KeypadCrypto.unlock(secrets, job.code); })).then(function (opened) {
+          opened.forEach(function (result, i) { if (!result) throw new Error('self-test failed for code ' + (i + 1)); });
+          return secrets;
+        });
+      })
+      .then(function (secrets) {
+        lastFile = '/* keypad-secrets.js - made by tools/encrypt-codes.html. Scrambled; do not edit by hand. */\n' +
+          'window.KEYPAD_SECRETS = ' + JSON.stringify(secrets, null, 1) + ';\n';
+        $('output').value = lastFile;
+        $('copy').disabled = false; $('download').disabled = false;
+        $('ok').textContent = 'done: ' + jobs.length + ' hidden code' + (jobs.length === 1 ? '' : 's') + ', each one tested. Download the file, or copy it.';
+      })
+      .catch(function (error) { $('ok').textContent = ''; $('problems').textContent = 'Something went wrong: ' + error.message; });
+  });
+
+  $('copy').addEventListener('click', function () {
+    $('output').select();
+    (navigator.clipboard ? navigator.clipboard.writeText(lastFile) : Promise.reject()).catch(function () { document.execCommand('copy'); });
+  });
+  $('download').addEventListener('click', function () {
+    var link = document.createElement('a');
+    link.href = URL.createObjectURL(new Blob([lastFile], { type: 'text/javascript' }));
+    link.download = 'keypad-secrets.js';
+    document.body.appendChild(link); link.click(); link.remove();
+  });
+})();
+</script>
+</body>
+</html>
