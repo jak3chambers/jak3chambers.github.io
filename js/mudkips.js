@@ -197,14 +197,35 @@
   }
 
   // ---- Adoption (right-click a mudkip) -------------------------------------
-  // Saved in this browser only (localStorage), same as the messages. An
-  // adoption lasts ADOPTION_DAYS, then the mudkip goes back to being unadopted.
+  // With config/firebase-config.js filled in, adoptions are shared: everyone sees who owns which
+  // mudkip, and the first adopter wins. Without it they only live in this browser (localStorage).
+  // An adoption lasts ADOPTION_DAYS, then the mudkip goes back to being unadopted.
   var ADOPTION_DAYS = 30;
   var STORE_KEY = 'mudkip-adoptions';
+  var remote = !!(window.SiteDB && window.SiteDB.enabled);
+  var remoteAdoptions = {};
   var raycaster = new THREE.Raycaster();
   var pointerNdc = new THREE.Vector2();
 
+  function refreshAdoptions() {
+    if (!remote) return Promise.resolve();
+    return window.SiteDB.list('adoptions').then(function (docs) {
+      var now = Date.now(), data = {};
+      docs.forEach(function (doc) {
+        if (/^[0-9]+$/.test(doc.id) && doc.until > now && doc.owner && doc.name) {
+          data[doc.id] = { owner: doc.owner, name: doc.name, until: doc.until };
+        }
+      });
+      remoteAdoptions = data;
+    }).catch(function () {});
+  }
+  if (remote) {
+    refreshAdoptions();
+    setInterval(refreshAdoptions, 60000);
+  }
+
   function loadAdoptions() {
+    if (remote) return remoteAdoptions;
     try {
       var data = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
       var now = Date.now(), changed = false;
@@ -215,10 +236,18 @@
       return data;
     } catch (_) { return {}; }
   }
+  // Resolves true when saved, false when it could not be (for example someone adopted it first).
   function saveAdoption(index, owner, name) {
+    var until = Date.now() + ADOPTION_DAYS * 86400000;
+    if (remote) {
+      return window.SiteDB.upsert('adoptions', String(index), { owner: owner, name: name, until: until })
+        .then(function () { remoteAdoptions[index] = { owner: owner, name: name, until: until }; return true; })
+        .catch(function () { return refreshAdoptions().then(function () { return false; }); });
+    }
     var data = loadAdoptions();
-    data[index] = { owner: owner, name: name, until: Date.now() + ADOPTION_DAYS * 86400000 };
+    data[index] = { owner: owner, name: name, until: until };
     try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch (_) {}
+    return Promise.resolve(true);
   }
 
   var style = document.createElement('style');
@@ -290,8 +319,13 @@
       var o = ownerInput.value.trim(), n = nameInput.value.trim();
       if (!o) { ownerInput.focus(); return; }
       if (!n) { nameInput.focus(); return; }
-      saveAdoption(index, o, n);
-      closePopup();
+      if (window.SiteDB && (window.SiteDB.isBlocked(o) || window.SiteDB.isBlocked(n))) { ownerInput.focus(); return; }
+      save.disabled = true;
+      saveAdoption(index, o, n).then(function (saved) {
+        if (saved) { closePopup(); return; }
+        box.textContent = 'Someone adopted this one first.';
+        setTimeout(closePopup, 2000);
+      });
     }
     save.addEventListener('click', submit);
     box.addEventListener('keydown', function (event) {

@@ -132,6 +132,11 @@
   .delete-message { grid-column: 2; grid-row: 1; align-self: start; padding: 5px 8px; font-size: 11px; }
   .empty-state { grid-column: 1 / -1; padding: 20px 0; color: var(--muted); }
 
+  #owner-area { margin-top: 28px; padding-top: 10px; border-top: 1px dashed rgba(31, 52, 72, 0.3); }
+  #owner-form { display: grid; gap: 10px; max-width: 320px; margin-top: 8px; }
+  #owner-form[hidden] { display: none; }
+  #owner-status { min-height: 1.2em; margin: 0; color: var(--muted); font-size: 13px; }
+
   @media (max-width: 520px) {
     header { align-items: flex-start; }
     main { width: calc(100% - 16px); min-height: calc(100vh - 72px); margin-bottom: 16px; padding: 24px 18px; }
@@ -178,39 +183,63 @@
     <section aria-labelledby="messages-heading">
       <div id="messages" aria-live="polite"></div>
     </section>
+
+    <div id="owner-area" hidden>
+      <button id="owner-toggle" class="text-button" type="button">Owner</button>
+      <form id="owner-form" hidden>
+        <label><span id="owner-email-label">Email</span><input id="owner-email" type="email" autocomplete="username"></label>
+        <label><span id="owner-password-label">Password</span><input id="owner-password" type="password" autocomplete="current-password"></label>
+        <div class="form-actions"><button id="owner-login" type="submit">Log in</button></div>
+        <p id="owner-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
   </main>
 
 <script src="js/nav.js"></script>
+<script src="config/firebase-config.js"></script>
+<script src="js/site-db.js"></script>
 <script>
   const isCatalan = window.PAGE_LANGUAGE === 'ca';
   const copy = isCatalan ? {
-    title: 'Hi vaig ser aquí', pageHeading: 'Deixa un rastre', home: 'Inici', make: 'Signa el mur', cancel: 'Cancel·la',
-    intro: 'Escriu el teu nom i una línia. Un missatge per nom. Per ara el mur només viu en aquest navegador: ningú més el pot veure encara.',
+    title: 'Hi vaig ser aquí', pageHeading: 'Deixa un rastre', make: 'Signa el mur', cancel: 'Cancel·la',
+    introLocal: 'Escriu el teu nom i una línia. Un missatge per nom. Per ara el mur només viu en aquest navegador: ningú més el pot veure encara.',
+    introShared: 'Escriu el teu nom i una línia. Un missatge per nom. Tothom qui visiti la pàgina veu el mur.',
     name: 'Nom', message: 'Missatge', post: 'Publica el missatge', clear: 'Esborra-ho tot',
-    heading: 'El mur', empty: 'Encara no hi ha cap missatge.',
-    duplicate: 'Ja hi ha un missatge amb aquest nom. Esborra’l primer o tria un altre nom.',
+    heading: 'El mur', empty: 'Encara no hi ha cap missatge.', loading: 'Carregant el mur…',
+    duplicate: 'Ja hi ha un missatge amb aquest nom. Tria un altre nom.',
     count: n => n === 1 ? '1 missatge' : n + ' missatges', anonymous: 'Anònim',
     delete: 'Esborra', blocked: 'El missatge conté llenguatge ofensiu i no s’ha publicat.', confirm: 'Vols esborrar tots els missatges d’aquest navegador?',
-    saved: 'Missatge desat.', removed: 'Missatge esborrat.', cleared: 'S’han esborrat tots els missatges.',
+    saved: 'Missatge publicat.', removed: 'Missatge esborrat.', cleared: 'S’han esborrat tots els missatges.',
     storageError: 'No s’ha pogut desar. Potser l’emmagatzematge del navegador és ple.',
+    loadError: 'No s’ha pogut carregar el mur. Torna-ho a provar d’aquí una estona.',
+    postError: 'No s’ha pogut publicar el missatge. Torna-ho a provar.',
+    owner: 'Propietari', email: 'Correu', password: 'Contrasenya', login: 'Entra', logout: 'Surt',
+    loginError: 'No s’ha pogut entrar. Comprova el correu i la contrasenya.', loggedIn: 'Has entrat. Ja pots esborrar missatges.',
     dateLocale: 'ca-ES'
   } : {
-    title: 'I was here', pageHeading: 'Leave a trace', home: 'Home', make: 'Sign the wall', cancel: 'Cancel',
-    intro: 'Write your name and a line. One message per name. For now the wall only lives in this browser: nobody else can see it yet.',
+    title: 'I was here', pageHeading: 'Leave a trace', make: 'Sign the wall', cancel: 'Cancel',
+    introLocal: 'Write your name and a line. One message per name. For now the wall only lives in this browser: nobody else can see it yet.',
+    introShared: 'Write your name and a line. One message per name. Everyone who visits sees the wall.',
     name: 'Name', message: 'Message', post: 'Post message', clear: 'Clear all',
-    heading: 'The wall', empty: 'No messages yet.',
-    duplicate: 'A message with that name is already on the wall. Delete it first or pick another name.',
+    heading: 'The wall', empty: 'No messages yet.', loading: 'Loading the wall…',
+    duplicate: 'A message with that name is already on the wall. Pick another name.',
     count: n => n === 1 ? '1 message' : n + ' messages', anonymous: 'Anonymous',
     delete: 'Delete', blocked: 'This message contains blocked language and was not posted.', confirm: 'Clear all messages saved in this browser?',
     saved: 'Message posted.', removed: 'Message deleted.', cleared: 'All messages cleared.',
     storageError: 'Could not save. Browser storage may be full.',
+    loadError: 'Could not load the wall. Try again in a bit.',
+    postError: 'Could not post your message. Try again.',
+    owner: 'Owner', email: 'Email', password: 'Password', login: 'Log in', logout: 'Log out',
+    loginError: 'Could not log in. Check the email and password.', loggedIn: 'Logged in. You can delete messages now.',
     dateLocale: 'en-US'
   };
+
+  const remote = !!(window.SiteDB && window.SiteDB.enabled);
 
   document.title = copy.title;
   document.getElementById('page-title').textContent = copy.pageHeading;
   window.SITE_NAV.build(document.getElementById('page-nav'), 'messages', window.PAGE_LANGUAGE);
-  document.getElementById('intro').textContent = copy.intro;
+  document.getElementById('intro').textContent = remote ? copy.introShared : copy.introLocal;
   document.getElementById('name-label').textContent = copy.name;
   document.getElementById('message-label').textContent = copy.message;
   document.getElementById('post-button').textContent = copy.post;
@@ -218,39 +247,29 @@
   document.getElementById('messages-heading').textContent = copy.heading;
   document.getElementById('make-message').textContent = copy.make;
   document.getElementById('cancel-message').textContent = copy.cancel;
+  document.getElementById('owner-email-label').textContent = copy.email;
+  document.getElementById('owner-password-label').textContent = copy.password;
+  document.getElementById('owner-login').textContent = copy.login;
 
   const storageKey = 'chambersCatMessagesV1';
   const messagesElement = document.getElementById('messages');
   const countElement = document.getElementById('message-count');
   const statusElement = document.getElementById('status');
+  const ownerToggle = document.getElementById('owner-toggle');
+  const ownerForm = document.getElementById('owner-form');
+  const ownerStatus = document.getElementById('owner-status');
   let messages = [];
 
-  const blockedTerms = [
-    'nigger', 'nigga', 'kike', 'chink', 'gook', 'spic', 'wetback', 'beaner',
-    'raghead', 'towelhead', 'sandnigger', 'faggot', 'fag', 'dyke', 'tranny',
-    'coon', 'retard', 'retarded', 'maricon'
-  ];
-  const blockedSlurs = new RegExp('(?:^|[^a-z0-9])(?:' + blockedTerms.map(term =>
-    term.split('').map(character => character.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('[^a-z0-9]*')
-  ).join('|') + ')(?=$|[^a-z0-9])', 'i');
+  const nameKey = name => window.SiteDB.nameKey(name);
+  const containsBlockedLanguage = text => window.SiteDB.isBlocked(text);
 
-  // Names are compared ignoring case, accents and extra spaces ("  Jake  " == "jake").
-  function nameKey(name) {
-    return name.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
-  }
-
-  function containsBlockedLanguage(text) {
-    const normalized = text.normalize('NFKD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .replace(/0/g, 'o').replace(/[1!|]/g, 'i').replace(/3/g, 'e')
-      .replace(/4/g, 'a').replace(/[5$]/g, 's').replace(/7/g, 't');
-    return blockedSlurs.test(normalized);
-  }
+  // Who sees Delete buttons: everyone in local mode (it is only their own browser),
+  // only the logged-in owner on the shared wall.
+  const canDelete = () => !remote || window.SiteDB.isOwner();
 
   document.getElementById('make-message').addEventListener('click', () => {
     document.getElementById('message-form').hidden = false;
-    document.getElementById('message-body').focus();
+    document.getElementById('author').focus();
   });
   document.getElementById('cancel-message').addEventListener('click', () => {
     const form = document.getElementById('message-form');
@@ -259,14 +278,7 @@
     statusElement.textContent = '';
   });
 
-  try {
-    const stored = JSON.parse(localStorage.getItem(storageKey) || '[]');
-    if (Array.isArray(stored)) messages = stored.filter(item => item && typeof item.id === 'string' && typeof item.body === 'string');
-  } catch (_) {
-    statusElement.textContent = copy.storageError;
-  }
-
-  function save() {
+  function saveLocal() {
     try {
       localStorage.setItem(storageKey, JSON.stringify(messages));
       return true;
@@ -274,6 +286,33 @@
       statusElement.textContent = copy.storageError;
       return false;
     }
+  }
+
+  function loadMessages() {
+    if (!remote) {
+      try {
+        const stored = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        if (Array.isArray(stored)) messages = stored.filter(item => item && typeof item.id === 'string' && typeof item.body === 'string');
+      } catch (_) {
+        statusElement.textContent = copy.storageError;
+      }
+      render();
+      return Promise.resolve();
+    }
+    return window.SiteDB.list('messages', 'createdAt').then(docs => {
+      messages = docs
+        .filter(doc => typeof doc.body === 'string' && typeof doc.createdAt === 'number')
+        .map(doc => ({ id: doc.id, author: doc.name || '', body: doc.body, createdAt: new Date(doc.createdAt).toISOString() }))
+        .sort((a, b) => a.createdAt < b.createdAt ? -1 : 1);
+      render();
+    }).catch(() => {
+      countElement.textContent = '';
+      messagesElement.replaceChildren();
+      const failed = document.createElement('p');
+      failed.className = 'empty-state';
+      failed.textContent = copy.loadError;
+      messagesElement.append(failed);
+    });
   }
 
   function render() {
@@ -303,20 +342,31 @@
       const body = document.createElement('p');
       body.className = 'message-body';
       body.textContent = message.body;
-      const remove = document.createElement('button');
-      remove.type = 'button';
-      remove.className = 'delete-message';
-      remove.dataset.deleteId = message.id;
-      remove.textContent = copy.delete;
-      remove.setAttribute('aria-label', copy.delete + ': ' + (message.author || copy.anonymous));
       meta.append(author, date);
-      article.append(meta, body, remove);
+      article.append(meta, body);
+      if (canDelete()) {
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'delete-message';
+        remove.dataset.deleteId = message.id;
+        remove.textContent = copy.delete;
+        remove.setAttribute('aria-label', copy.delete + ': ' + (message.author || copy.anonymous));
+        article.append(remove);
+      }
       messagesElement.append(article);
     });
   }
 
+  function finishPost(form) {
+    form.reset();
+    statusElement.textContent = copy.saved;
+    form.hidden = true;
+    render();
+  }
+
   document.getElementById('message-form').addEventListener('submit', event => {
     event.preventDefault();
+    const form = event.currentTarget;
     const body = document.getElementById('message-body').value.trim();
     if (!body) return;
     const author = document.getElementById('author').value.replace(/\s+/g, ' ').trim();
@@ -329,35 +379,90 @@
       statusElement.textContent = copy.duplicate;
       return;
     }
-    messages.push({ id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2), author, body, createdAt: new Date().toISOString() });
-    if (!save()) {
-      messages.pop();
+
+    if (!remote) {
+      messages.push({ id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2), author, body, createdAt: new Date().toISOString() });
+      if (!saveLocal()) { messages.pop(); return; }
+      finishPost(form);
       return;
     }
-    event.currentTarget.reset();
-    statusElement.textContent = copy.saved;
-    event.currentTarget.hidden = true;
-    render();
+
+    const postButton = document.getElementById('post-button');
+    postButton.disabled = true;
+    window.SiteDB.create('messages', window.SiteDB.docId(author), { name: author, body, createdAt: Date.now() })
+      .then(() => loadMessages().then(() => finishPost(form)))
+      .catch(() => {
+        // Either someone just took the name, or something broke: reload the wall and check.
+        loadMessages().then(() => {
+          statusElement.textContent = messages.some(message => nameKey(message.author || '') === nameKey(author)) ? copy.duplicate : copy.postError;
+        });
+      })
+      .finally(() => { postButton.disabled = false; });
   });
 
   messagesElement.addEventListener('click', event => {
     const button = event.target.closest('[data-delete-id]');
     if (!button) return;
-    messages = messages.filter(message => message.id !== button.dataset.deleteId);
-    save();
-    statusElement.textContent = copy.removed;
-    render();
+    const id = button.dataset.deleteId;
+    if (!remote) {
+      messages = messages.filter(message => message.id !== id);
+      saveLocal();
+      statusElement.textContent = copy.removed;
+      render();
+      return;
+    }
+    button.disabled = true;
+    window.SiteDB.remove('messages', id)
+      .then(() => { statusElement.textContent = copy.removed; return loadMessages(); })
+      .catch(() => { button.disabled = false; statusElement.textContent = copy.postError; });
   });
 
-  document.getElementById('clear-button').addEventListener('click', () => {
+  const clearButton = document.getElementById('clear-button');
+  clearButton.hidden = remote; // clearing a shared wall in one click is too easy to do by accident
+  clearButton.addEventListener('click', () => {
     if (!messages.length || !window.confirm(copy.confirm)) return;
     messages = [];
-    save();
+    saveLocal();
     statusElement.textContent = copy.cleared;
     render();
   });
 
-  render();
+  // ---- owner login (shared wall only) ----
+  if (remote) {
+    document.getElementById('owner-area').hidden = false;
+    function refreshOwnerUi() {
+      const loggedIn = window.SiteDB.isOwner();
+      ownerToggle.textContent = loggedIn ? copy.logout : copy.owner;
+    }
+    refreshOwnerUi();
+    ownerToggle.addEventListener('click', () => {
+      if (window.SiteDB.isOwner()) {
+        window.SiteDB.logout();
+        ownerForm.hidden = true;
+        refreshOwnerUi();
+        render();
+      } else {
+        ownerForm.hidden = !ownerForm.hidden;
+        if (!ownerForm.hidden) document.getElementById('owner-email').focus();
+      }
+    });
+    ownerForm.addEventListener('submit', event => {
+      event.preventDefault();
+      ownerStatus.textContent = '';
+      window.SiteDB.login(document.getElementById('owner-email').value.trim(), document.getElementById('owner-password').value)
+        .then(() => {
+          document.getElementById('owner-password').value = '';
+          ownerForm.hidden = true;
+          refreshOwnerUi();
+          statusElement.textContent = copy.loggedIn;
+          render();
+        })
+        .catch(() => { ownerStatus.textContent = copy.loginError; });
+    });
+  }
+
+  countElement.textContent = remote ? copy.loading : '';
+  loadMessages();
 </script>
 </body>
 </html>
